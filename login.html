@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login | Kaplet Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,200;9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0C0E0D;
+    --green: #36CD81;
+    --white: #FFFFFF;
+    --gray: rgba(255,255,255,0.55);
+    --gray-dim: rgba(255,255,255,0.2);
+    --border: rgba(255,255,255,0.08);
+    --card: #141614;
+    --font: 'DM Sans', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font);
+    background: var(--black);
+    color: var(--white);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Linee diagonali verdi — identiche al sito kaplet.it */
+  .bg-lines { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+  .bg-line {
+    position: absolute;
+    height: 1px;
+    width: 70%;
+    background: linear-gradient(90deg, transparent, rgba(54,205,129,0.3), transparent);
+  }
+  .bg-line:nth-child(1) { top: 15%; left: -10%; transform: rotate(-8deg); }
+  .bg-line:nth-child(2) { top: 30%; left: -5%; transform: rotate(-5deg); opacity: .6; }
+  .bg-line:nth-child(3) { top: 55%; left: 15%; transform: rotate(-3deg); opacity: .4; }
+  .bg-line:nth-child(4) { top: 70%; left: -10%; transform: rotate(-6deg); opacity: .5; }
+  .bg-line:nth-child(5) { top: 85%; left: 25%; transform: rotate(-4deg); opacity: .3; }
+
+  /* WRAPPER */
+  .login-wrap {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 420px;
+    padding: 2rem;
+  }
+
+  /* LOGO */
+  .logo {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .logo-text {
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+
+  .logo-text span { color: var(--green); }
+
+  .logo-sub {
+    font-size: 0.68rem;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gray);
+  }
+
+  /* CARD */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 2rem;
+    position: relative;
+  }
+
+  /* PANELS — login e recovery si alternano */
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .card-title {
+    font-size: 1.2rem;
+    font-weight: 200;
+    color: var(--white);
+    letter-spacing: -0.01em;
+    margin-bottom: 0.25rem;
+  }
+
+  .card-sub {
+    font-size: 0.78rem;
+    font-weight: 300;
+    color: var(--gray);
+    margin-bottom: 1.75rem;
+    line-height: 1.6;
+  }
+
+  /* FORM */
+  .form-group { margin-bottom: 1.25rem; }
+
+  label {
+    display: block;
+    font-size: 0.6rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 6px;
+  }
+
+  input[type="email"],
+  input[type="password"] {
+    width: 100%;
+    height: 44px;
+    background: var(--black);
+    border: 1px solid var(--border);
+    color: var(--white);
+    font-family: var(--font);
+    font-size: 0.875rem;
+    font-weight: 300;
+    padding: 0 14px;
+    outline: none;
+    transition: border-color 0.2s;
+    border-radius: 0;
+  }
+
+  input:focus { border-color: var(--green); }
+  input::placeholder { color: var(--gray-dim); }
+
+  /* BOTTONI */
+  .btn-primary {
+    width: 100%;
+    height: 46px;
+    background: var(--green);
+    border: 1px solid var(--green);
+    color: var(--black);
+    font-family: var(--font);
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 0.25rem;
+  }
+
+  .btn-primary:hover { background: transparent; color: var(--green); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .btn-secondary {
+    width: 100%;
+    height: 44px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--gray);
+    font-family: var(--font);
+    font-size: 0.78rem;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 0;
+    margin-top: 0.75rem;
+  }
+
+  .btn-secondary:hover { border-color: var(--gray); color: var(--white); }
+
+  /* LINK password dimenticata */
+  .forgot-link {
+    display: block;
+    text-align: right;
+    font-size: 0.72rem;
+    font-weight: 300;
+    color: var(--gray);
+    cursor: pointer;
+    margin-top: -0.75rem;
+    margin-bottom: 1.25rem;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .forgot-link:hover { color: var(--green); }
+
+  /* MESSAGGI */
+  .msg {
+    display: none;
+    margin-top: 1rem;
+    padding: 0.85rem 1rem;
+    font-size: 0.78rem;
+    font-weight: 300;
+    line-height: 1.5;
+  }
+
+  .msg.error {
+    background: rgba(239,68,68,0.08);
+    border: 1px solid rgba(239,68,68,0.2);
+    color: #f87171;
+  }
+
+  .msg.success {
+    background: rgba(54,205,129,0.08);
+    border: 1px solid rgba(54,205,129,0.2);
+    color: var(--green);
+  }
+
+  .msg.show { display: block; }
+
+  /* SPINNER */
+  .spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(0,0,0,0.25);
+    border-top-color: var(--black);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    display: none;
+  }
+
+  .spinner.on-green {
+    border-color: rgba(0,0,0,0.2);
+    border-top-color: var(--black);
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* DIVIDER */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 1.5rem 0;
+  }
+
+  /* BACK LINK */
+  .back-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.7rem;
+    font-weight: 300;
+    color: var(--gray);
+    cursor: pointer;
+    margin-bottom: 1.5rem;
+    width: fit-content;
+    transition: color 0.2s;
+    background: none;
+    border: none;
+    padding: 0;
+    font-family: var(--font);
+  }
+
+  .back-link:hover { color: var(--green); }
+
+  /* FOOTER */
+  .page-footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.68rem;
+    font-weight: 300;
+    color: var(--gray);
+  }
+
+  .page-footer a {
+    color: var(--green);
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+
+  .page-footer a:hover { opacity: 0.7; }
+
+  /* SUCCESS STATE dopo recovery */
+  .success-state {
+    text-align: center;
+    padding: 1rem 0;
+  }
+
+  .success-icon {
+    width: 48px;
+    height: 48px;
+    border: 1px solid var(--green);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.25rem;
+    color: var(--green);
+    font-size: 1.25rem;
+  }
+
+  .success-title {
+    font-size: 1rem;
+    font-weight: 200;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+
+  .success-sub {
+    font-size: 0.8rem;
+    font-weight: 300;
+    color: var(--gray);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  /* RESET PASSWORD panel (quando arriva dal link email) */
+  .reset-hint {
+    font-size: 0.72rem;
+    font-weight: 300;
+    color: var(--gray);
+    margin-top: 0.5rem;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 480px) {
+    .login-wrap { padding: 1.25rem; }
+    .card { padding: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-lines">
+  <div class="bg-line"></div>
+  <div class="bg-line"></div>
+  <div class="bg-line"></div>
+  <div class="bg-line"></div>
+  <div class="bg-line"></div>
+</div>
+
+<div class="login-wrap">
+
+  <!-- LOGO -->
+  <div class="logo">
+    <div class="logo-text"><span>·</span>KAPLET</div>
+    <div class="logo-sub">Academy</div>
+  </div>
+
+  <div class="card">
+
+    <!-- ===================== PANEL: LOGIN ===================== -->
+    <div class="panel active" id="panel-login">
+      <div class="card-title">Accedi</div>
+      <div class="card-sub">Inserisci le credenziali per accedere alla tua area personale.</div>
+
+      <form onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label>Email aziendale</label>
+          <input type="email" id="login-email" placeholder="nome@kaplet.it" required autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="login-password" placeholder="••••••••" required autocomplete="current-password">
+        </div>
+
+        <!-- Link password dimenticata -->
+        <span class="forgot-link" onclick="showPanel('panel-recovery')">
+          Password dimenticata?
+        </span>
+
+        <button type="submit" class="btn-primary" id="btn-login">
+          <span id="btn-login-text">Accedi</span>
+          <div class="spinner" id="spinner-login"></div>
+        </button>
+      </form>
+
+      <div class="msg error" id="login-error"></div>
+    </div>
+
+    <!-- ===================== PANEL: RECOVERY ===================== -->
+    <div class="panel" id="panel-recovery">
+
+      <button class="back-link" onclick="showPanel('panel-login')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Torna al login
+      </button>
+
+      <div id="recovery-form-wrap">
+        <div class="card-title">Password dimenticata</div>
+        <div class="card-sub">Inserisci la tua email aziendale. Ti mandiamo un link per reimpostare la password.</div>
+
+        <form onsubmit="handleRecovery(event)">
+          <div class="form-group">
+            <label>Email aziendale</label>
+            <input type="email" id="recovery-email" placeholder="nome@kaplet.it" required autocomplete="email">
+          </div>
+
+          <button type="submit" class="btn-primary" id="btn-recovery">
+            <span id="btn-recovery-text">Invia link di recupero</span>
+            <div class="spinner" id="spinner-recovery"></div>
+          </button>
+        </form>
+
+        <div class="msg error" id="recovery-error"></div>
+        <div class="msg success" id="recovery-info"></div>
+      </div>
+
+      <!-- Stato successo — mostrato dopo invio email -->
+      <div id="recovery-success" style="display:none">
+        <div class="success-state">
+          <div class="success-icon">✓</div>
+          <div class="success-title">Email inviata</div>
+          <div class="success-sub">
+            Controlla la casella <strong id="recovery-email-display"></strong> — trovi il link per reimpostare la password.<br><br>
+            Se non la vedi, controlla anche la cartella <strong>Spam</strong> o <strong>Posta indesiderata</strong>.
+          </div>
+          <button class="btn-secondary" onclick="showPanel('panel-login')">
+            Torna al login
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ===================== PANEL: RESET PASSWORD ===================== -->
+    <!-- Mostrato quando l'utente arriva dal link nell'email -->
+    <div class="panel" id="panel-reset">
+      <div class="card-title">Nuova password</div>
+      <div class="card-sub">Scegli una nuova password per il tuo account.</div>
+
+      <form onsubmit="handleReset(event)">
+        <div class="form-group">
+          <label>Nuova password</label>
+          <input type="password" id="new-password" placeholder="Minimo 8 caratteri" required minlength="8" autocomplete="new-password">
+        </div>
+        <div class="form-group">
+          <label>Conferma password</label>
+          <input type="password" id="confirm-password" placeholder="Ripeti la password" required minlength="8" autocomplete="new-password">
+        </div>
+
+        <button type="submit" class="btn-primary" id="btn-reset">
+          <span id="btn-reset-text">Imposta nuova password</span>
+          <div class="spinner" id="spinner-reset"></div>
+        </button>
+      </form>
+
+      <div class="msg error" id="reset-error"></div>
+      <div class="msg success" id="reset-success-msg"></div>
+    </div>
+
+  </div><!-- /card -->
+
+  <div class="page-footer">
+    <a href="index.html">← Torna al catalogo corsi</a>
+  </div>
+
+</div><!-- /login-wrap -->
+
+<!-- Supabase CDN -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script>
+
+// ============================================================
+// INIT — controlla se è un link di recovery dall'email
+// ============================================================
+(async () => {
+  // Supabase manda l'utente su questa pagina con #access_token nell'URL
+  // quando clicca il link di reset dalla email
+  const hash = window.location.hash;
+  const params = new URLSearchParams(hash.replace('#', '?'));
+  const type = params.get('type');
+
+  if (type === 'recovery') {
+    // L'utente è arrivato dal link email — mostra il form reset password
+    showPanel('panel-reset');
+    return;
+  }
+
+  // Altrimenti controlla se già loggato
+  try {
+    const user = await getUtenteCorrente();
+    if (user) {
+      const tecnico = await getTecnicoCorrente();
+      if (tecnico?.is_admin) {
+        window.location.href = 'admin.html';
+      } else {
+        window.location.href = 'tecnico.html';
+      }
+    }
+  } catch(e) {
+    // Non loggato — rimane sulla pagina login
+  }
+})();
+
+// ============================================================
+// NAVIGAZIONE TRA PANEL
+// ============================================================
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+
+  // Pulisci messaggi di errore quando cambi panel
+  document.querySelectorAll('.msg').forEach(m => m.classList.remove('show'));
+}
+
+// ============================================================
+// LOGIN
+// ============================================================
+async function handleLogin(e) {
+  e.preventDefault();
+  const email    = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  const btn      = document.getElementById('btn-login');
+  const txt      = document.getElementById('btn-login-text');
+  const spin     = document.getElementById('spinner-login');
+  const err      = document.getElementById('login-error');
+
+  // Loading
+  btn.disabled = true;
+  txt.style.display = 'none';
+  spin.style.display = 'block';
+  err.classList.remove('show');
+
+  try {
+    await loginUtente(email, password);
+    const tecnico = await getTecnicoCorrente();
+
+    if (tecnico?.is_admin) {
+      window.location.href = 'admin.html';
+    } else {
+      window.location.href = 'tecnico.html';
+    }
+
+  } catch(error) {
+    let messaggio = 'Email o password non corretti. Riprova.';
+    if (error.message?.includes('Email not confirmed')) {
+      messaggio = 'Email non ancora confermata. Controlla la tua casella di posta.';
+    } else if (error.message?.includes('Invalid login')) {
+      messaggio = 'Credenziali non valide. Controlla email e password.';
+    } else if (error.message?.includes('too many requests')) {
+      messaggio = 'Troppi tentativi. Attendi qualche minuto e riprova.';
+    }
+    err.textContent = messaggio;
+    err.classList.add('show');
+    btn.disabled = false;
+    txt.style.display = 'block';
+    spin.style.display = 'none';
+  }
+}
+
+// ============================================================
+// RECOVERY — invio email reset
+// ============================================================
+async function handleRecovery(e) {
+  e.preventDefault();
+  const email = document.getElementById('recovery-email').value.trim();
+  const btn   = document.getElementById('btn-recovery');
+  const txt   = document.getElementById('btn-recovery-text');
+  const spin  = document.getElementById('spinner-recovery');
+  const err   = document.getElementById('recovery-error');
+  const info  = document.getElementById('recovery-info');
+
+  btn.disabled = true;
+  txt.style.display = 'none';
+  spin.style.display = 'block';
+  err.classList.remove('show');
+  info.classList.remove('show');
+
+  try {
+    const client = getClient();
+    const { error } = await client.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + window.location.pathname
+    });
+
+    if (error) throw error;
+
+    // Mostra stato successo
+    document.getElementById('recovery-form-wrap').style.display = 'none';
+    document.getElementById('recovery-success').style.display = 'block';
+    document.getElementById('recovery-email-display').textContent = email;
+
+  } catch(error) {
+    let messaggio = 'Errore durante l\'invio. Riprova tra qualche minuto.';
+    if (error.message?.includes('rate limit')) {
+      messaggio = 'Troppi tentativi. Attendi qualche minuto e riprova.';
+    }
+    err.textContent = messaggio;
+    err.classList.add('show');
+    btn.disabled = false;
+    txt.style.display = 'block';
+    spin.style.display = 'none';
+  }
+}
+
+// ============================================================
+// RESET — imposta nuova password
+// ============================================================
+async function handleReset(e) {
+  e.preventDefault();
+  const newPass     = document.getElementById('new-password').value;
+  const confirmPass = document.getElementById('confirm-password').value;
+  const btn         = document.getElementById('btn-reset');
+  const txt         = document.getElementById('btn-reset-text');
+  const spin        = document.getElementById('spinner-reset');
+  const err         = document.getElementById('reset-error');
+  const success     = document.getElementById('reset-success-msg');
+
+  err.classList.remove('show');
+  success.classList.remove('show');
+
+  // Validazione
+  if (newPass !== confirmPass) {
+    err.textContent = 'Le password non coincidono. Riprova.';
+    err.classList.add('show');
+    return;
+  }
+
+  if (newPass.length < 8) {
+    err.textContent = 'La password deve essere di almeno 8 caratteri.';
+    err.classList.add('show');
+    return;
+  }
+
+  btn.disabled = true;
+  txt.style.display = 'none';
+  spin.style.display = 'block';
+
+  try {
+    const client = getClient();
+    const { error } = await client.auth.updateUser({ password: newPass });
+
+    if (error) throw error;
+
+    success.textContent = 'Password aggiornata con successo! Verrai reindirizzato al login…';
+    success.classList.add('show');
+
+    // Redirect al login dopo 2 secondi
+    setTimeout(() => {
+      window.location.href = 'login.html';
+    }, 2000);
+
+  } catch(error) {
+    err.textContent = 'Errore durante l\'aggiornamento. Il link potrebbe essere scaduto — richiedine uno nuovo.';
+    err.classList.add('show');
+    btn.disabled = false;
+    txt.style.display = 'block';
+    spin.style.display = 'none';
+  }
+}
+
+</script>
+</body>
+</html>
