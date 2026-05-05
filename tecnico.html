@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La mia Academy | Kaplet</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,200;9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black:#0C0E0D; --black2:#111311; --card:#141614; --card2:#1A1A1A;
+    --green:#36CD81; --green-dim:rgba(54,205,129,0.08); --green-border:rgba(54,205,129,0.2);
+    --white:#FFFFFF; --gray:rgba(255,255,255,0.55); --border:rgba(255,255,255,0.08);
+    --warn:#F59E0B; --danger:#EF4444; --font:'DM Sans',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:var(--font);background:var(--black);color:var(--white);min-height:100vh;-webkit-font-smoothing:antialiased;}
+
+  /* NAVBAR */
+  nav{position:sticky;top:0;z-index:100;background:var(--black);border-bottom:1px solid var(--border);height:70px;display:flex;align-items:center;padding:0 3rem;justify-content:space-between;}
+  .nav-logo{font-size:1rem;font-weight:400;letter-spacing:.3em;text-transform:uppercase;color:var(--white);text-decoration:none;}
+  .nav-logo span{color:var(--green);}
+  .nav-right{display:flex;align-items:center;gap:1.5rem;}
+  .nav-user{font-size:.78rem;font-weight:300;color:var(--gray);}
+  .nav-user strong{color:var(--white);}
+  .btn-nav{padding:8px 20px;border:1px solid var(--border);background:transparent;color:var(--gray);font-family:var(--font);font-size:.72rem;font-weight:400;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .2s;border-radius:0;}
+  .btn-nav:hover{border-color:var(--green);color:var(--green);}
+  .btn-cta-nav{background:var(--green);border-color:var(--green);color:var(--black);}
+  .btn-cta-nav:hover{background:transparent;color:var(--green);}
+
+  /* HERO */
+  .hero{padding:4rem 3rem 3rem;border-bottom:1px solid var(--border);}
+  .hero-inner{max-width:1300px;margin:0 auto;}
+  .hero-label{font-size:.68rem;font-weight:400;letter-spacing:.15em;text-transform:uppercase;color:var(--green);margin-bottom:1rem;display:flex;align-items:center;gap:8px;}
+  .hero-label::before{content:'';display:block;width:20px;height:1px;background:var(--green);}
+  .hero h1{font-size:clamp(1.8rem,4vw,3rem);font-weight:200;color:var(--white);line-height:1.15;letter-spacing:-.02em;margin-bottom:.5rem;}
+  .hero-sub{font-size:.9rem;font-weight:300;color:var(--gray);}
+
+  /* STATS */
+  .stats{display:flex;gap:0;border-top:1px solid var(--border);margin-top:2.5rem;}
+  .stat{flex:1;padding:1.5rem 2rem 1rem 0;border-right:1px solid var(--border);margin-right:2rem;}
+  .stat:last-child{border-right:none;margin-right:0;}
+  .stat-num{font-size:2rem;font-weight:200;color:var(--white);line-height:1;margin-bottom:4px;}
+  .stat-num.warn{color:var(--warn);}
+  .stat-num.danger{color:var(--danger);}
+  .stat-label{font-size:.62rem;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:var(--green);}
+
+  /* MAIN */
+  .main{max-width:1300px;margin:0 auto;padding:2.5rem 3rem 5rem;}
+
+  /* SEZIONE */
+  .section-title{font-size:1.25rem;font-weight:200;color:var(--white);letter-spacing:-.01em;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+
+  /* BTN */
+  .btn-green{display:inline-flex;align-items:center;gap:6px;background:var(--green);border:1px solid var(--green);color:var(--black);font-family:var(--font);font-size:.72rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;padding:9px 20px;cursor:pointer;transition:all .2s;border-radius:0;}
+  .btn-green:hover{background:transparent;color:var(--green);}
+  .btn-outline{display:inline-flex;align-items:center;gap:5px;background:transparent;border:1px solid var(--border);color:var(--gray);font-family:var(--font);font-size:.68rem;font-weight:400;letter-spacing:.08em;text-transform:uppercase;padding:7px 14px;cursor:pointer;transition:all .2s;border-radius:0;}
+  .btn-outline:hover{border-color:var(--green);color:var(--green);}
+  .btn-danger{border-color:rgba(239,68,68,.3);color:#f87171;}
+  .btn-danger:hover{border-color:var(--danger);background:rgba(239,68,68,.08);}
+
+  /* CERT CARDS */
+  .cert-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1px;background:var(--border);margin-bottom:3rem;}
+  .cert-card{background:var(--card);padding:1.5rem;border-left:2px solid transparent;transition:all .2s;animation:fadeUp .25s ease both;}
+  .cert-card:hover{background:var(--card2);border-left-color:var(--green);}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+  .cert-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:.75rem;margin-bottom:.85rem;}
+  .cert-brand-tag{font-size:.58rem;font-weight:400;letter-spacing:.12em;text-transform:uppercase;padding:3px 9px;border:1px solid;border-radius:0;}
+  .cert-stato{font-size:.58rem;font-weight:400;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border:1px solid;}
+  .stato-attiva{color:var(--green);border-color:var(--green-border);background:var(--green-dim);}
+  .stato-scaduta{color:var(--danger);border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.05);}
+  .stato-attenzione{color:var(--warn);border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.05);}
+
+  .cert-nome{font-size:.95rem;font-weight:300;color:var(--white);line-height:1.35;margin-bottom:.4rem;}
+  .cert-meta{font-size:.72rem;font-weight:300;color:var(--gray);display:flex;flex-direction:column;gap:3px;}
+  .cert-meta span{display:flex;align-items:center;gap:5px;}
+
+  .cert-scadenza-bar{margin-top:.85rem;padding-top:.85rem;border-top:1px solid var(--border);}
+  .scad-label{font-size:.6rem;font-weight:400;letter-spacing:.08em;text-transform:uppercase;color:var(--gray);margin-bottom:4px;}
+  .scad-bar-bg{height:3px;background:rgba(255,255,255,.08);border-radius:2px;margin-bottom:4px;}
+  .scad-bar-fill{height:3px;border-radius:2px;transition:width .4s;}
+  .fill-ok{background:var(--green);}
+  .fill-warn{background:var(--warn);}
+  .fill-danger{background:var(--danger);}
+  .scad-giorni{font-size:.65rem;color:var(--gray);}
+  .scad-giorni.warn{color:var(--warn);}
+  .scad-giorni.danger{color:var(--danger);}
+
+  .cert-actions{display:flex;gap:.5rem;margin-top:.85rem;padding-top:.85rem;border-top:1px solid var(--border);}
+
+  /* EMPTY */
+  .empty{text-align:center;padding:4rem 2rem;color:var(--gray);grid-column:1/-1;}
+  .empty-icon{font-size:2rem;margin-bottom:.75rem;opacity:.3;}
+  .empty-title{font-size:1rem;font-weight:200;color:var(--white);margin-bottom:.3rem;}
+
+  /* MODAL */
+  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(12,14,13,.88);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+  .modal-overlay.open{display:flex;}
+  .modal{background:var(--card);border:1px solid var(--border);width:90%;max-width:520px;max-height:90vh;overflow-y:auto;}
+  .modal-head{background:var(--black);padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);}
+  .modal-title{font-size:.75rem;font-weight:400;letter-spacing:.12em;text-transform:uppercase;color:var(--white);}
+  .modal-close{background:transparent;border:none;color:var(--gray);cursor:pointer;font-size:1.2rem;padding:0;transition:color .2s;}
+  .modal-close:hover{color:var(--white);}
+  .modal-body{padding:1.5rem;}
+  .modal-foot{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;gap:.75rem;justify-content:flex-end;}
+
+  .form-group{margin-bottom:1.25rem;}
+  .form-label{display:block;font-size:.62rem;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:var(--green);margin-bottom:5px;}
+  .form-input,.form-select{width:100%;height:42px;background:var(--black);border:1px solid var(--border);color:var(--white);font-family:var(--font);font-size:.875rem;font-weight:300;padding:0 12px;outline:none;transition:border-color .2s;border-radius:0;appearance:none;}
+  .form-select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2336CD81' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:30px;}
+  .form-input:focus,.form-select:focus{border-color:var(--green);}
+  .form-input::placeholder{color:rgba(255,255,255,.2);}
+  .form-select option{background:#1a1a1a;}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+  .form-hint{font-size:.65rem;color:var(--gray);margin-top:4px;font-weight:300;}
+
+  .btn-cancel{padding:8px 18px;background:transparent;border:1px solid var(--border);color:var(--gray);font-family:var(--font);font-size:.7rem;font-weight:400;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:all .2s;border-radius:0;}
+  .btn-cancel:hover{border-color:rgba(255,255,255,.3);color:var(--white);}
+  .btn-save{padding:8px 22px;background:var(--green);border:1px solid var(--green);color:var(--black);font-family:var(--font);font-size:.7rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:all .2s;border-radius:0;}
+  .btn-save:hover{background:transparent;color:var(--green);}
+  .btn-save:disabled{opacity:.5;cursor:not-allowed;}
+
+  /* FILE UPLOAD */
+  .file-zone{border:1px dashed var(--border);padding:1.25rem;text-align:center;cursor:pointer;transition:border-color .2s;}
+  .file-zone:hover{border-color:var(--green);}
+  .file-zone-label{font-size:.72rem;font-weight:300;color:var(--gray);}
+  .file-zone-label strong{color:var(--green);}
+  .file-name{font-size:.72rem;color:var(--green);margin-top:6px;}
+
+  /* TOAST */
+  .toast{position:fixed;bottom:2rem;right:2rem;background:var(--card);border:1px solid var(--border);padding:.85rem 1.25rem;font-size:.78rem;font-weight:300;color:var(--white);z-index:300;display:none;align-items:center;gap:.75rem;max-width:340px;}
+  .toast.show{display:flex;}
+  .toast.success{border-color:var(--green-border);}
+  .toast.error{border-color:rgba(239,68,68,.3);}
+  .toast-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+  .toast.success .toast-dot{background:var(--green);}
+  .toast.error .toast-dot{background:var(--danger);}
+
+  /* PERCORSO */
+  .percorso-section{margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border);}
+  .percorso-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1px;background:var(--border);}
+  .percorso-card{background:var(--card);padding:1.25rem;}
+  .percorso-brand{font-size:.68rem;font-weight:400;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem;}
+  .percorso-corso{font-size:.82rem;font-weight:300;color:var(--white);line-height:1.35;margin-bottom:.5rem;}
+  .percorso-status{font-size:.62rem;color:var(--gray);}
+
+  @media(max-width:768px){
+    nav{padding:0 1.5rem;}
+    .hero,.main{padding-left:1.5rem;padding-right:1.5rem;}
+    .stats{flex-direction:column;}
+    .stat{border-right:none;border-bottom:1px solid var(--border);padding-bottom:1rem;margin-bottom:1rem;margin-right:0;}
+    .cert-grid{grid-template-columns:1fr;}
+    .form-row{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html"><span>·</span>KAPLET Academy</a>
+  <div class="nav-right">
+    <div class="nav-user">Benvenuto, <strong id="nav-nome">—</strong></div>
+    <button class="btn-nav" onclick="handleLogout()">Esci</button>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-label">La mia area personale</div>
+    <h1 id="hero-title">Le mie certificazioni</h1>
+    <p class="hero-sub" id="hero-sub">Gestisci il tuo percorso formativo — aggiungi nuove certificazioni e monitora le scadenze.</p>
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-num" id="stat-totale">—</div>
+        <div class="stat-label">Certificazioni attive</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num warn" id="stat-scadono">—</div>
+        <div class="stat-label">In scadenza (60gg)</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num danger" id="stat-scadute">—</div>
+        <div class="stat-label">Scadute</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- Le mie certificazioni -->
+  <div class="section-title">
+    <span>Le mie certificazioni</span>
+    <button class="btn-green" onclick="openModal()">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Aggiungi certificazione
+    </button>
+  </div>
+  <div class="cert-grid" id="cert-grid">
+    <div class="empty">
+      <div class="empty-icon">◌</div>
+      <div class="empty-title">Caricamento...</div>
+    </div>
+  </div>
+
+  <!-- Corsi consigliati per il mio ruolo -->
+  <div class="percorso-section">
+    <div class="section-title">
+      <span>Corsi consigliati per il tuo ruolo</span>
+    </div>
+    <div class="percorso-grid" id="percorso-grid">
+      <div style="background:var(--card);padding:1.25rem;color:var(--gray);font-size:.82rem;font-weight:300">Caricamento percorso...</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL AGGIUNTA CERTIFICAZIONE -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="modal-title">Nuova certificazione</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="modal-cert-id">
+
+      <div class="form-group">
+        <label class="form-label">Brand / Vendor</label>
+        <select class="form-select" id="modal-brand" onchange="aggiornaCorsiBrand()">
+          <option value="">Seleziona brand…</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Corso / Certificazione</label>
+        <select class="form-select" id="modal-corso">
+          <option value="">Prima seleziona un brand…</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Data conseguimento</label>
+          <input type="date" class="form-input" id="modal-data-cons">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Data scadenza <span style="color:var(--gray);font-style:normal">(se applicabile)</span></label>
+          <input type="date" class="form-input" id="modal-data-scad">
+          <div class="form-hint">Lascia vuoto se non scade</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Documento di prova (PDF, immagine)</label>
+        <div class="file-zone" onclick="document.getElementById('file-input').click()">
+          <div class="file-zone-label">Clicca per caricare o trascina il file<br><strong>PDF, JPG, PNG</strong> — max 10MB</div>
+          <div class="file-name" id="file-name-display" style="display:none"></div>
+        </div>
+        <input type="file" id="file-input" accept=".pdf,.jpg,.jpeg,.png" style="display:none" onchange="handleFileSelect(this)">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Note</label>
+        <input type="text" class="form-input" id="modal-note" placeholder="Es. livello conseguito, ente esaminatore…">
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="closeModal()">Annulla</button>
+      <button class="btn-save" id="btn-salva" onclick="salvaCertificazione()">Salva certificazione</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div class="toast-dot"></div>
+  <span id="toast-msg"></span>
+</div>
+
+<!-- Supabase CDN -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<script src="js/courses.js"></script>
+<script>
+let tecnicoCorrente = null;
+let certCorrente = [];
+let fileSelezionato = null;
+let editingCertId = null;
+
+// ============================================================
+// INIT
+// ============================================================
+// Configurazione Supabase inline
+const SURL_T = 'https://mcgerrvorboagkukzuzc.supabase.co';
+const SKEY_T = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1jZ2VycnZvcmJvYWdrdWt6dXpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4NjEyNzIsImV4cCI6MjA5MzQzNzI3Mn0.eDHZ-QUQLM2tFU4KPDEiIqXZsdfk_Cxnz7Ywxt6T46o';
+const sbT = supabase.createClient(SURL_T, SKEY_T);
+
+// Override delle funzioni api.js con versioni che usano sbT
+async function getUtenteCorrente() {
+  const { data: { session } } = await sbT.auth.getSession();
+  return session ? session.user : null;
+}
+
+async function getTecnicoCorrente() {
+  const user = await getUtenteCorrente();
+  if (!user) return null;
+  const { data } = await sbT.from('tecnici').select('*').eq('id', user.id).single();
+  return data;
+}
+
+async function getMieCertificazioni() {
+  const user = await getUtenteCorrente();
+  if (!user) return [];
+  const { data } = await sbT.from('certificazioni').select('*').eq('tech_id', user.id).order('data_conseguimento', { ascending: false });
+  return data || [];
+}
+
+async function aggiungiCertificazione(cert) {
+  const user = await getUtenteCorrente();
+  if (!user) throw new Error('Non autenticato');
+  const { data, error } = await sbT.from('certificazioni').insert({
+    tech_id: user.id, brand: cert.brand, corso: cert.corso,
+    data_conseguimento: cert.dataConseguimento, data_scadenza: cert.dataScadenza || null,
+    documento_url: cert.documentoUrl || null, note: cert.note || null, stato: 'attiva'
+  }).select().single();
+  if (error) throw error;
+  return data;
+}
+
+async function eliminaCertificazione(id) {
+  const { error } = await sbT.from('certificazioni').delete().eq('id', id);
+  if (error) throw error;
+}
+
+async function aggiornaCertificazione(id, campi) {
+  const { data, error } = await sbT.from('certificazioni').update(campi).eq('id', id).select().single();
+  if (error) throw error;
+  return data;
+}
+
+async function caricaDocumento(file) {
+  const user = await getUtenteCorrente();
+  if (!user) throw new Error('Non autenticato');
+  const ext = file.name.split('.').pop();
+  const path = `${user.id}/${Date.now()}.${ext}`;
+  const { error } = await sbT.storage.from('certificati').upload(path, file);
+  if (error) throw error;
+  const { data } = await sbT.storage.from('certificati').createSignedUrl(path, 60 * 60 * 24 * 365);
+  return data.signedUrl;
+}
+
+async function logoutUtente() {
+  await sbT.auth.signOut();
+}
+
+// INIT con onAuthStateChange per evitare loop
+let tecnicoInitDone = false;
+
+sbT.auth.onAuthStateChange(async (event, session) => {
+  if (tecnicoInitDone) return;
+  if (event === 'SIGNED_OUT') { window.location.href = 'login.html'; return; }
+  if (!session) return;
+
+  tecnicoInitDone = true;
+
+  try {
+    tecnicoCorrente = await getTecnicoCorrente();
+    if (!tecnicoCorrente) { window.location.href = 'login.html'; return; }
+    if (tecnicoCorrente.is_admin) { window.location.href = 'admin.html'; return; }
+
+    document.getElementById('nav-nome').textContent = tecnicoCorrente.nome;
+    document.getElementById('hero-title').textContent = `Ciao, ${tecnicoCorrente.nome}`;
+    document.getElementById('hero-sub').textContent = `Ruolo: ${tecnicoCorrente.ruolo} · Gestisci le tue certificazioni e monitora le scadenze.`;
+
+    popolaBrandModal();
+    await caricaCertificazioni();
+    renderPercorso();
+  } catch(e) {
+    console.error(e);
+  }
+});
+
+setTimeout(async () => {
+  if (tecnicoInitDone) return;
+  const { data: { session } } = await sbT.auth.getSession();
+  if (!session) window.location.href = 'login.html';
+}, 3000);
+
+// ============================================================
+// CARICA CERTIFICAZIONI
+// ============================================================
+async function caricaCertificazioni() {
+  certCorrente = await getMieCertificazioni();
+  renderCertificazioni();
+  aggiornaStats();
+}
+
+function aggiornaStats() {
+  const oggi = new Date();
+  const attive = certCorrente.filter(c => c.stato === 'attiva');
+  const scadute = certCorrente.filter(c => c.stato === 'scaduta' || (c.data_scadenza && new Date(c.data_scadenza) < oggi));
+  const inScadenza = attive.filter(c => {
+    if (!c.data_scadenza) return false;
+    const giorni = giorniAllaScadenza(c.data_scadenza);
+    return giorni !== null && giorni >= 0 && giorni <= 60;
+  });
+  document.getElementById('stat-totale').textContent = attive.length;
+  document.getElementById('stat-scadono').textContent = inScadenza.length;
+  document.getElementById('stat-scadute').textContent = scadute.length;
+}
+
+function renderCertificazioni() {
+  const grid = document.getElementById('cert-grid');
+  if (!certCorrente.length) {
+    grid.innerHTML = `<div class="empty">
+      <div class="empty-icon">◌</div>
+      <div class="empty-title">Nessuna certificazione ancora</div>
+      <p>Clicca "Aggiungi certificazione" per iniziare.</p>
+    </div>`;
+    return;
+  }
+
+  grid.innerHTML = certCorrente.map((c, i) => {
+    const col = BRAND_COLORS[c.brand] || '#36CD81';
+    const giorni = giorniAllaScadenza(c.data_scadenza);
+    const oggi = new Date();
+    const isScaduta = c.data_scadenza && new Date(c.data_scadenza) < oggi;
+
+    let statoClass = 'stato-attiva';
+    let statoLabel = 'Attiva';
+    if (isScaduta) { statoClass = 'stato-scaduta'; statoLabel = 'Scaduta'; }
+    else if (giorni !== null && giorni <= 30) { statoClass = 'stato-attenzione'; statoLabel = `Scade in ${giorni}gg`; }
+    else if (giorni !== null && giorni <= 60) { statoClass = 'stato-attenzione'; statoLabel = 'In scadenza'; }
+
+    // Barra scadenza
+    let scadenzaHTML = '';
+    if (c.data_scadenza) {
+      const dataAcq = new Date(c.data_conseguimento);
+      const dataScad = new Date(c.data_scadenza);
+      const totaleGiorni = Math.ceil((dataScad - dataAcq) / (1000 * 60 * 60 * 24));
+      const rimanenti = Math.max(0, giorni || 0);
+      const pct = Math.min(100, Math.max(0, (rimanenti / totaleGiorni) * 100));
+      const fillClass = isScaduta ? 'fill-danger' : (giorni <= 30 ? 'fill-danger' : giorni <= 60 ? 'fill-warn' : 'fill-ok');
+      const giorniClass = isScaduta ? 'danger' : (giorni <= 60 ? 'warn' : '');
+      scadenzaHTML = `<div class="cert-scadenza-bar">
+        <div class="scad-label">Scadenza</div>
+        <div class="scad-bar-bg"><div class="scad-bar-fill ${fillClass}" style="width:${pct}%"></div></div>
+        <div class="scad-giorni ${giorniClass}">${isScaduta ? 'Scaduta il' : 'Scade il'} ${formatData(c.data_scadenza)}${!isScaduta && giorni !== null ? ` · ${giorni} giorni` : ''}</div>
+      </div>`;
+    }
+
+    return `<div class="cert-card" style="animation-delay:${Math.min(i * .04, .3)}s">
+      <div class="cert-card-top">
+        <span class="cert-brand-tag" style="color:${col};border-color:${col}44;background:${col}12">${c.brand}</span>
+        <span class="cert-stato ${statoClass}">${statoLabel}</span>
+      </div>
+      <div class="cert-nome">${c.corso}</div>
+      <div class="cert-meta">
+        <span>
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Conseguita: ${formatData(c.data_conseguimento)}
+        </span>
+        ${c.note ? `<span style="color:rgba(255,255,255,.4);font-size:.68rem">${c.note}</span>` : ''}
+      </div>
+      ${scadenzaHTML}
+      <div class="cert-actions">
+        ${c.documento_url ? `<button class="btn-outline" onclick="apriDocumento('${c.documento_url}')">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Documento
+        </button>` : ''}
+        <button class="btn-outline" onclick="modificaCert('${c.id}')">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Modifica
+        </button>
+        <button class="btn-outline btn-danger" onclick="eliminaCert('${c.id}', '${c.corso.replace(/'/g,"\\'")}')">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+          Elimina
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ============================================================
+// PERCORSO FORMATIVO
+// ============================================================
+function renderPercorso() {
+  if (!tecnicoCorrente) return;
+  const ruolo = tecnicoCorrente.ruolo;
+  const roleIndex = ROLES.indexOf(ruolo);
+  if (roleIndex === -1) return;
+
+  const corsiRuolo = COURSES.filter(c => c.roles.includes(roleIndex));
+  const brandsConsigliate = [...new Set(corsiRuolo.map(c => c.brand))];
+  const certBrands = new Set(certCorrente.map(c => c.brand));
+
+  const grid = document.getElementById('percorso-grid');
+  if (!corsiRuolo.length) {
+    grid.innerHTML = `<div style="background:var(--card);padding:1.25rem;color:var(--gray);font-size:.82rem">Nessun corso specifico per questo ruolo.</div>`;
+    return;
+  }
+
+  grid.innerHTML = corsiRuolo.slice(0, 12).map(c => {
+    const col = BRAND_COLORS[c.brand] || '#36CD81';
+    const haCert = certCorrente.some(cert => cert.brand === c.brand && cert.corso === c.name);
+    return `<div class="percorso-card">
+      <div class="percorso-brand" style="color:${col}">${c.brand}</div>
+      <div class="percorso-corso">${c.name}</div>
+      <div class="percorso-status">
+        ${haCert
+          ? `<span style="color:var(--green)">✓ Certificato</span>`
+          : `<span style="color:rgba(255,255,255,.3)">◌ Non ancora conseguito</span>`
+        }
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ============================================================
+// MODAL
+// ============================================================
+function popolaBrandModal() {
+  const sel = document.getElementById('modal-brand');
+  const brands = [...new Set(COURSES.map(c => c.brand))].sort();
+  brands.forEach(b => {
+    const o = document.createElement('option');
+    o.value = b; o.textContent = b;
+    sel.appendChild(o);
+  });
+}
+
+function aggiornaCorsiBrand() {
+  const brand = document.getElementById('modal-brand').value;
+  const sel = document.getElementById('modal-corso');
+  if (!brand) {
+    sel.innerHTML = '<option value="">Prima seleziona un brand…</option>';
+    return;
+  }
+  const corsi = COURSES.filter(c => c.brand === brand);
+  sel.innerHTML = corsi.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+}
+
+function openModal() {
+  editingCertId = null;
+  document.getElementById('modal-title').textContent = 'Nuova certificazione';
+  document.getElementById('modal-cert-id').value = '';
+  document.getElementById('modal-brand').value = '';
+  document.getElementById('modal-corso').innerHTML = '<option value="">Prima seleziona un brand…</option>';
+  document.getElementById('modal-data-cons').value = new Date().toISOString().split('T')[0];
+  document.getElementById('modal-data-scad').value = '';
+  document.getElementById('modal-note').value = '';
+  document.getElementById('file-name-display').style.display = 'none';
+  fileSelezionato = null;
+  document.getElementById('modal').classList.add('open');
+}
+
+function modificaCert(id) {
+  const cert = certCorrente.find(c => c.id === id);
+  if (!cert) return;
+  editingCertId = id;
+  document.getElementById('modal-title').textContent = 'Modifica certificazione';
+  document.getElementById('modal-cert-id').value = id;
+  document.getElementById('modal-brand').value = cert.brand;
+  aggiornaCorsiBrand();
+  document.getElementById('modal-corso').value = cert.corso;
+  document.getElementById('modal-data-cons').value = cert.data_conseguimento;
+  document.getElementById('modal-data-scad').value = cert.data_scadenza || '';
+  document.getElementById('modal-note').value = cert.note || '';
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+}
+
+function handleFileSelect(input) {
+  if (input.files && input.files[0]) {
+    fileSelezionato = input.files[0];
+    const display = document.getElementById('file-name-display');
+    display.textContent = fileSelezionato.name;
+    display.style.display = 'block';
+  }
+}
+
+async function salvaCertificazione() {
+  const brand = document.getElementById('modal-brand').value;
+  const corso = document.getElementById('modal-corso').value;
+  const datacons = document.getElementById('modal-data-cons').value;
+  const datascad = document.getElementById('modal-data-scad').value;
+  const note = document.getElementById('modal-note').value;
+
+  if (!brand || !corso || !datacons) {
+    mostraToast('Compila brand, corso e data conseguimento.', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('btn-salva');
+  btn.disabled = true;
+  btn.textContent = 'Salvataggio…';
+
+  try {
+    let documentoUrl = null;
+    if (fileSelezionato) {
+      documentoUrl = await caricaDocumento(fileSelezionato);
+    }
+
+    if (editingCertId) {
+      await aggiornaCertificazione(editingCertId, {
+        brand, corso,
+        data_conseguimento: datacons,
+        data_scadenza: datascad || null,
+        note: note || null,
+        ...(documentoUrl && { documento_url: documentoUrl })
+      });
+      mostraToast('Certificazione aggiornata.', 'success');
+    } else {
+      await aggiungiCertificazione({ brand, corso, dataConseguimento: datacons, dataScadenza: datascad, documentoUrl, note });
+      mostraToast('Certificazione aggiunta con successo!', 'success');
+    }
+
+    closeModal();
+    await caricaCertificazioni();
+    renderPercorso();
+
+  } catch (err) {
+    console.error(err);
+    mostraToast('Errore durante il salvataggio. Riprova.', 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Salva certificazione';
+  }
+}
+
+async function eliminaCert(id, nome) {
+  if (!confirm(`Eliminare la certificazione "${nome}"?\nQuesta azione non può essere annullata.`)) return;
+  try {
+    await eliminaCertificazione(id);
+    mostraToast('Certificazione eliminata.', 'success');
+    await caricaCertificazioni();
+    renderPercorso();
+  } catch (err) {
+    mostraToast('Errore durante l\'eliminazione.', 'error');
+  }
+}
+
+function apriDocumento(url) {
+  window.open(url, '_blank');
+}
+
+// ============================================================
+// UTILS
+// ============================================================
+async function handleLogout() {
+  await logoutUtente();
+  window.location.href = 'login.html';
+}
+
+function mostraToast(messaggio, tipo = 'success') {
+  const toast = document.getElementById('toast');
+  const msg = document.getElementById('toast-msg');
+  toast.className = `toast ${tipo} show`;
+  msg.textContent = messaggio;
+  setTimeout(() => toast.classList.remove('show'), 3500);
+}
+</script>
+</body>
+</html>
