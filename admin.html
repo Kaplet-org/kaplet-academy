@@ -6,610 +6,830 @@
 <title>Admin | Kaplet Academy</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,200;9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
 <style>
-:root{--black:#0C0E0D;--card:#141614;--card2:#1A1A1A;--green:#36CD81;--green-dim:rgba(54,205,129,0.08);--green-border:rgba(54,205,129,0.2);--white:#FFFFFF;--gray:rgba(255,255,255,0.55);--border:rgba(255,255,255,0.08);--warn:#F59E0B;--danger:#EF4444;--font:'DM Sans',sans-serif;}
+:root{--black:#0C0E0D;--card:#141614;--card2:#1A1A1A;--green:#36CD81;--gdim:rgba(54,205,129,0.08);--gborder:rgba(54,205,129,0.2);--white:#FFFFFF;--gray:rgba(255,255,255,0.55);--border:rgba(255,255,255,0.08);--warn:#F59E0B;--danger:#EF4444;--font:'DM Sans',sans-serif;}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:var(--font);background:var(--black);color:var(--white);min-height:100vh;-webkit-font-smoothing:antialiased;}
-nav{position:sticky;top:0;z-index:100;background:var(--black);border-bottom:1px solid var(--border);height:70px;display:flex;align-items:center;padding:0 3rem;justify-content:space-between;}
-.nav-logo{font-size:1rem;font-weight:400;letter-spacing:.3em;text-transform:uppercase;color:var(--white);text-decoration:none;}
-.nav-logo span{color:var(--green);}
-.nav-links{display:flex;gap:0;}
-.nav-tab{padding:0 1.25rem;height:70px;display:flex;align-items:center;font-size:.68rem;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:var(--gray);cursor:pointer;border:none;background:transparent;border-bottom:2px solid transparent;transition:all .2s;font-family:var(--font);}
-.nav-tab:hover{color:var(--white);}
-.nav-tab.active{color:var(--green);border-bottom-color:var(--green);}
-.nav-right{display:flex;align-items:center;gap:1rem;}
-.btn-nav{padding:8px 18px;border:1px solid var(--border);background:transparent;color:var(--gray);font-family:var(--font);font-size:.72rem;font-weight:400;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .2s;border-radius:0;text-decoration:none;display:inline-flex;align-items:center;}
+nav{position:sticky;top:0;z-index:100;background:var(--black);border-bottom:1px solid var(--border);height:70px;display:flex;align-items:center;padding:0 2rem;justify-content:space-between;}
+.logo{font-size:1rem;font-weight:400;letter-spacing:.3em;text-transform:uppercase;color:var(--white);text-decoration:none;}
+.logo span{color:var(--green);}
+.nav-tabs{display:flex;}
+.ntab{padding:0 1rem;height:70px;display:flex;align-items:center;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gray);cursor:pointer;border:none;background:transparent;border-bottom:2px solid transparent;transition:all .2s;font-family:var(--font);}
+.ntab:hover{color:var(--white);}
+.ntab.active{color:var(--green);border-bottom-color:var(--green);}
+.nav-r{display:flex;align-items:center;gap:.75rem;}
+.btn-nav{padding:7px 14px;border:1px solid var(--border);background:transparent;color:var(--gray);font-family:var(--font);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;}
 .btn-nav:hover{border-color:var(--green);color:var(--green);}
-.hero{padding:4rem 3rem 2.5rem;border-bottom:1px solid var(--border);}
-.hero-inner{max-width:1300px;margin:0 auto;}
-.hero-label{font-size:.68rem;font-weight:400;letter-spacing:.15em;text-transform:uppercase;color:var(--green);margin-bottom:1rem;display:flex;align-items:center;gap:8px;}
-.hero-label::before{content:'';display:block;width:20px;height:1px;background:var(--green);}
-.hero h1{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:200;color:var(--white);letter-spacing:-.02em;margin-bottom:.5rem;}
-.hero-sub{font-size:.88rem;font-weight:300;color:var(--gray);}
-.stats-row{display:flex;gap:0;margin-top:2.5rem;border-top:1px solid var(--border);}
-.stat{flex:1;padding:1.5rem 1.5rem 1rem 0;border-right:1px solid var(--border);margin-right:1.5rem;}
+.hero{padding:3rem 2rem 2rem;border-bottom:1px solid var(--border);}
+.hero-inner{max-width:1400px;margin:0 auto;}
+.hero-lbl{font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--green);margin-bottom:.75rem;display:flex;align-items:center;gap:8px;}
+.hero-lbl::before{content:'';display:block;width:20px;height:1px;background:var(--green);}
+h1{font-size:clamp(1.6rem,3vw,2.4rem);font-weight:200;letter-spacing:-.02em;margin-bottom:.4rem;}
+.hero-sub{font-size:.85rem;font-weight:300;color:var(--gray);}
+.stats{display:flex;gap:0;margin-top:2rem;border-top:1px solid var(--border);}
+.stat{flex:1;padding:1.25rem 1rem 1rem 0;border-right:1px solid var(--border);margin-right:1rem;}
 .stat:last-child{border-right:none;margin-right:0;}
-.stat-num{font-size:2rem;font-weight:200;line-height:1;margin-bottom:4px;}
-.s-green{color:var(--green);}.s-warn{color:var(--warn);}.s-danger{color:var(--danger);}.s-white{color:var(--white);}
-.stat-label{font-size:.6rem;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:var(--green);}
-.main{max-width:1300px;margin:0 auto;padding:2.5rem 3rem 5rem;}
-.section{display:none;}.section.active{display:block;}
-.section-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem;}
-.section-title{font-size:1.2rem;font-weight:200;color:var(--white);}
-.table-wrap{overflow-x:auto;background:var(--border);}
+.sn{font-size:1.8rem;font-weight:200;line-height:1;margin-bottom:3px;}
+.s-g{color:var(--green);}.s-w{color:var(--warn);}.s-d{color:var(--danger);}.s-wh{color:var(--white);}
+.sl{font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--green);}
+.main{max-width:1400px;margin:0 auto;padding:2rem 2rem 5rem;}
+.sec{display:none;}.sec.active{display:block;}
+.sec-hd{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:1.25rem;}
+.sec-title{font-size:1.1rem;font-weight:200;}
+/* TABELLE */
+.tw{overflow-x:auto;background:var(--border);}
 table{width:100%;border-collapse:collapse;}
 thead{background:var(--card2);}
-th{padding:.75rem 1rem;font-size:.6rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--gray);text-align:left;border-bottom:1px solid var(--border);white-space:nowrap;}
-td{padding:.9rem 1rem;border-bottom:1px solid var(--border);background:var(--card);vertical-align:middle;font-size:.82rem;font-weight:300;}
+th{padding:.65rem .85rem;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gray);text-align:left;border-bottom:1px solid var(--border);white-space:nowrap;}
+td{padding:.75rem .85rem;border-bottom:1px solid var(--border);background:var(--card);vertical-align:middle;font-size:.8rem;font-weight:300;}
 tr:hover td{background:var(--card2);}
-.av{width:32px;height:32px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:600;color:var(--black);flex-shrink:0;}
-.tec-info{display:flex;align-items:center;gap:.75rem;}
-.tec-nome{font-weight:400;color:var(--white);}
-.tec-email{font-size:.7rem;color:var(--gray);margin-top:2px;}
-.pills{display:flex;flex-wrap:wrap;gap:4px;}
-.pill{font-size:.56rem;font-weight:400;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border:1px solid;}
-.p-ok{color:var(--green);border-color:var(--green-border);background:var(--green-dim);}
-.p-warn{color:var(--warn);border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.05);}
-.p-scad{color:rgba(255,255,255,.3);border-color:var(--border);}
+.av{width:30px;height:30px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:.58rem;font-weight:600;color:var(--black);flex-shrink:0;}
+.tec-info{display:flex;align-items:center;gap:.65rem;}
+.tec-nome{font-weight:400;font-size:.82rem;}
+.tec-email{font-size:.68rem;color:var(--gray);margin-top:1px;}
+/* PILLS */
+.pills{display:flex;flex-wrap:wrap;gap:3px;}
+.pill{font-size:.54rem;letter-spacing:.06em;text-transform:uppercase;padding:2px 6px;border:1px solid;}
+.p-ok{color:var(--green);border-color:var(--gborder);background:var(--gdim);}
+.p-wa{color:var(--warn);border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.05);}
+.p-no{color:rgba(255,255,255,.3);border-color:var(--border);}
+/* AZIONI */
+.act-btns{display:flex;gap:.35rem;flex-wrap:wrap;}
+.btn-xs{font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border:1px solid;background:transparent;cursor:pointer;transition:all .2s;font-family:var(--font);white-space:nowrap;}
+.btn-xs-g{color:var(--green);border-color:var(--gborder);}
+.btn-xs-g:hover{background:var(--green);color:var(--black);}
+.btn-xs-e{color:#f87171;border-color:rgba(239,68,68,.3);}
+.btn-xs-e:hover{background:rgba(239,68,68,.1);border-color:var(--danger);}
+.btn-xs-d{color:var(--gray);border-color:var(--border);}
+.btn-xs-d:hover{border-color:var(--green);color:var(--green);}
+.btn-sm{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;padding:8px 16px;border:1px solid var(--green);background:transparent;color:var(--green);cursor:pointer;transition:all .2s;font-family:var(--font);}
+.btn-sm:hover{background:var(--green);color:var(--black);}
+/* PROG */
 .prog-bg{height:3px;background:rgba(255,255,255,.06);border-radius:2px;margin-bottom:3px;}
 .prog-fill{height:3px;background:var(--green);border-radius:2px;}
-.prog-label{font-size:.62rem;color:var(--gray);}
-.btn-sm{font-size:.68rem;font-weight:400;letter-spacing:.08em;text-transform:uppercase;padding:8px 16px;border:1px solid var(--green);background:transparent;color:var(--green);cursor:pointer;transition:all .2s;border-radius:0;font-family:var(--font);}
-.btn-sm:hover{background:var(--green);color:var(--black);}
-.scad-list{display:flex;flex-direction:column;gap:1px;background:var(--border);}
-.scad-item{background:var(--card);padding:1rem 1.25rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;}
-.scad-urg{font-size:.58rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border:1px solid;flex-shrink:0;min-width:70px;text-align:center;}
-.u-danger{color:var(--danger);border-color:rgba(239,68,68,.3);}
-.u-warn{color:var(--warn);border-color:rgba(245,158,11,.3);}
+.prog-lbl{font-size:.6rem;color:var(--gray);}
+/* SCADENZE */
+.stabs{display:flex;gap:0;margin-bottom:1.25rem;border-bottom:1px solid var(--border);}
+.stab{padding:.45rem 1rem;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gray);cursor:pointer;border:none;background:transparent;border-bottom:2px solid transparent;transition:all .2s;font-family:var(--font);}
+.stab.active{color:var(--green);border-bottom-color:var(--green);}
+.slist{display:flex;flex-direction:column;gap:1px;background:var(--border);}
+.sitem{background:var(--card);padding:.85rem 1rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.surg{font-size:.56rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border:1px solid;flex-shrink:0;min-width:65px;text-align:center;}
+.u-d{color:var(--danger);border-color:rgba(239,68,68,.3);}
+.u-w{color:var(--warn);border-color:rgba(245,158,11,.3);}
 .u-ok{color:var(--gray);border-color:var(--border);}
-.scad-info{flex:1;min-width:200px;}
-.scad-nome{font-size:.88rem;font-weight:300;color:var(--white);}
-.scad-corso{font-size:.72rem;color:var(--gray);margin-top:2px;}
-.scad-data{font-size:.75rem;font-weight:400;color:var(--white);flex-shrink:0;}
+.sinfo{flex:1;min-width:180px;}
+.s-nome{font-size:.85rem;font-weight:300;}
+.s-corso{font-size:.7rem;color:var(--gray);margin-top:2px;}
+.s-data{font-size:.72rem;font-weight:400;flex-shrink:0;}
+/* MAPPA */
+.mx-wrap{overflow-x:auto;}
+.mx-hd{display:flex;gap:1px;background:var(--border);margin-bottom:1px;}
+.mhc{background:var(--card2);padding:.55rem .85rem;font-size:.56rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gray);min-width:80px;text-align:center;}
+.mhb{min-width:160px;text-align:left;}
 .mx-row{display:flex;gap:1px;background:var(--border);margin-bottom:1px;}
-.mx-brand{background:var(--card);padding:.85rem 1rem;min-width:160px;display:flex;align-items:center;gap:8px;}
-.mdot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
-.mname{font-size:.68rem;font-weight:400;letter-spacing:.08em;text-transform:uppercase;color:var(--white);}
-.mx-cell{background:var(--card);padding:.85rem 1rem;min-width:72px;text-align:center;}
-.mx-header{display:flex;gap:1px;background:var(--border);margin-bottom:1px;}
-.mh-cell{background:var(--card2);padding:.6rem 1rem;font-size:.58rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--gray);min-width:72px;text-align:center;}
-.mh-brand{min-width:160px;text-align:left;}
-.mb{display:inline-block;font-size:.56rem;padding:2px 6px;border:1px solid;}
-.mb-ok{color:var(--green);border-color:var(--green-border);background:var(--green-dim);}
-.mb-none{color:rgba(255,255,255,.2);border-color:var(--border);}
-.mb-warn{color:var(--warn);border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.05);}
-.mb-scad{color:rgba(239,68,68,.7);border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.05);}
-.empty{text-align:center;padding:4rem 2rem;color:var(--gray);}
-.empty-icon{font-size:2rem;opacity:.3;margin-bottom:.75rem;}
-.empty-title{font-size:1rem;font-weight:200;color:var(--white);}
-.toast{position:fixed;bottom:2rem;right:2rem;background:var(--card);border:1px solid var(--border);padding:.85rem 1.25rem;font-size:.78rem;font-weight:300;color:var(--white);z-index:300;display:none;align-items:center;gap:.75rem;max-width:340px;}
-.toast.show{display:flex;}
-.toast-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;background:var(--green);}
-/* MODAL */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;align-items:center;justify-content:center;}
-.modal-overlay.open{display:flex;}
-.modal-box{background:var(--card);border:1px solid var(--border);padding:2rem;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;}
-.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;}
-.modal-title{font-size:1rem;font-weight:200;color:var(--white);}
-.modal-close{background:none;border:none;color:var(--gray);cursor:pointer;font-size:1.2rem;line-height:1;}
-.modal-close:hover{color:var(--white);}
-.fld{margin-bottom:1rem;}
-.flabel{display:block;font-size:.6rem;font-weight:400;letter-spacing:.12em;text-transform:uppercase;color:var(--green);margin-bottom:6px;}
-.finput{width:100%;height:42px;background:var(--black);border:1px solid var(--border);color:var(--white);font-family:var(--font);font-size:.875rem;padding:0 12px;outline:none;transition:border-color .2s;}
-.finput:focus{border-color:var(--green);}
-.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
-.btn-primary{width:100%;height:46px;background:var(--green);border:none;color:var(--black);font-family:var(--font);font-size:.82rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .2s;margin-top:.5rem;}
-.btn-primary:hover{opacity:.85;}
-.btn-primary:disabled{opacity:.4;cursor:not-allowed;}
-.msg-error{display:none;margin-top:.75rem;padding:.75rem 1rem;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:#f87171;font-size:.78rem;}
-.msg-error.show{display:block;}
-/* SEZIONE SCADENZE - tabs interni */
-.scad-tabs{display:flex;gap:0;margin-bottom:1.5rem;border-bottom:1px solid var(--border);}
-.scad-tab{padding:.5rem 1.25rem;font-size:.65rem;font-weight:400;letter-spacing:.08em;text-transform:uppercase;color:var(--gray);cursor:pointer;border:none;background:transparent;border-bottom:2px solid transparent;transition:all .2s;font-family:var(--font);}
-.scad-tab.active{color:var(--green);border-bottom-color:var(--green);}
-/* LIGHTBOX */
-.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:500;align-items:center;justify-content:center;flex-direction:column;}
-.lightbox.open{display:flex;}
-.lightbox-header{position:absolute;top:0;left:0;right:0;padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(to bottom,rgba(0,0,0,.8),transparent);}
-.lightbox-title{font-size:.75rem;font-weight:300;color:var(--white);letter-spacing:.05em;}
-.lightbox-actions{display:flex;gap:.75rem;align-items:center;}
-.lightbox-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border:1px solid rgba(255,255,255,.2);background:transparent;color:var(--white);font-family:var(--font);font-size:.68rem;font-weight:400;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:all .2s;border-radius:0;}
-.lightbox-btn:hover{border-color:var(--green);color:var(--green);}
-.lightbox-close{background:none;border:none;color:var(--gray);cursor:pointer;font-size:1.4rem;padding:0;transition:color .2s;}
-.lightbox-close:hover{color:var(--white);}
-.lightbox-content{max-width:90vw;max-height:85vh;display:flex;align-items:center;justify-content:center;}
-.lightbox-img{max-width:90vw;max-height:82vh;object-fit:contain;border:1px solid rgba(255,255,255,.1);}
-.lightbox-pdf{width:min(860px,90vw);height:82vh;border:none;}
-/* btn documento inline */
-.btn-doc{display:inline-flex;align-items:center;gap:4px;font-size:.6rem;font-weight:400;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border:1px solid var(--green-border);background:var(--green-dim);color:var(--green);cursor:pointer;border-radius:0;font-family:var(--font);transition:all .2s;white-space:nowrap;}
+.mbrand{background:var(--card);padding:.75rem .85rem;min-width:160px;display:flex;align-items:center;gap:7px;}
+.mdot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.mname{font-size:.65rem;letter-spacing:.07em;text-transform:uppercase;}
+.mcell{background:var(--card);padding:.5rem .85rem;min-width:80px;text-align:center;vertical-align:middle;}
+.mb{display:inline-block;font-size:.54rem;padding:2px 5px;border:1px solid;cursor:default;}
+.mb-ok{color:var(--green);border-color:var(--gborder);background:var(--gdim);}
+.mb-wa{color:var(--warn);border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.05);}
+.mb-no{color:rgba(239,68,68,.7);border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.05);}
+.mb-none{color:rgba(255,255,255,.15);border-color:var(--border);}
+.mc-inner{display:flex;flex-direction:column;align-items:center;gap:3px;}
+.mc-corso{font-size:.52rem;color:var(--gray);max-width:75px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+/* DOC BTN */
+.btn-doc{display:inline-flex;align-items:center;gap:3px;font-size:.58rem;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border:1px solid var(--gborder);background:var(--gdim);color:var(--green);cursor:pointer;font-family:var(--font);transition:all .2s;white-space:nowrap;}
 .btn-doc:hover{background:var(--green);color:var(--black);}
-@media(max-width:900px){nav{padding:0 1.5rem;}.hero,.main{padding-left:1.5rem;padding-right:1.5rem;}.stats-row{flex-wrap:wrap;}}
+/* BADGE RUOLO */
+.badge-ruolo{font-size:.58rem;padding:2px 7px;border:1px solid var(--border);color:var(--gray);}
+.badge-admin{border-color:var(--gborder);color:var(--green);background:var(--gdim);}
+/* EMPTY */
+.empty{text-align:center;padding:3rem 2rem;color:var(--gray);}
+.empty-ic{font-size:2rem;opacity:.3;margin-bottom:.6rem;}
+.empty-t{font-size:1rem;font-weight:200;}
+/* MODAL */
+.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:200;align-items:center;justify-content:center;}
+.ov.open{display:flex;}
+.modal{background:var(--card);border:1px solid var(--border);width:90%;max-width:520px;max-height:92vh;overflow-y:auto;display:flex;flex-direction:column;}
+.modal-hd{background:var(--black);padding:1.1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:5;}
+.modal-title{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;}
+.modal-x{background:transparent;border:none;color:var(--gray);cursor:pointer;font-size:1.1rem;padding:0;}
+.modal-x:hover{color:var(--white);}
+.modal-body{padding:1.25rem;flex:1;}
+.modal-foot{padding:.85rem 1.25rem;border-top:1px solid var(--border);display:flex;gap:.65rem;justify-content:flex-end;position:sticky;bottom:0;background:var(--card);}
+.fg{margin-bottom:1rem;}
+.fl{display:block;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--green);margin-bottom:5px;}
+.fi,.fs{width:100%;height:40px;background:var(--black);border:1px solid var(--border);color:var(--white);font-family:var(--font);font-size:.85rem;padding:0 11px;outline:none;transition:border-color .2s;appearance:none;}
+.fi:focus,.fs:focus{border-color:var(--green);}
+.fi::placeholder{color:rgba(255,255,255,.2);}
+.fs{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2336CD81' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;}
+.fs option{background:#1a1a1a;}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;}
+.fhint{font-size:.62rem;color:var(--gray);margin-top:3px;}
+.btn-cancel{padding:7px 16px;background:transparent;border:1px solid var(--border);color:var(--gray);font-family:var(--font);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;}
+.btn-cancel:hover{border-color:rgba(255,255,255,.3);color:var(--white);}
+.btn-save{padding:7px 20px;background:var(--green);border:1px solid var(--green);color:var(--black);font-family:var(--font);font-size:.68rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;}
+.btn-save:hover{opacity:.85;}
+.btn-save:disabled{opacity:.4;cursor:not-allowed;}
+/* FILE ZONE */
+.fzone{border:1px dashed rgba(255,255,255,.15);padding:1.1rem;text-align:center;cursor:pointer;transition:all .2s;margin-top:.25rem;}
+.fzone:hover,.fzone.over{border-color:var(--green);background:var(--gdim);}
+.fzone-ic{font-size:1.2rem;margin-bottom:.35rem;opacity:.5;}
+.fzone-txt{font-size:.7rem;font-weight:300;color:var(--gray);line-height:1.5;}
+.fzone-txt strong{color:var(--green);font-weight:400;}
+.fsel{display:none;margin-top:.45rem;padding:.45rem .7rem;background:rgba(54,205,129,.05);border:1px solid var(--gborder);align-items:center;gap:.5rem;}
+.fsel.show{display:flex;}
+.fsel-nm{font-size:.68rem;color:var(--green);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.fsel-x{background:none;border:none;color:var(--gray);cursor:pointer;font-size:.85rem;padding:0;}
+.fsel-x:hover{color:var(--danger);}
+.doc-ex{display:flex;align-items:center;gap:.5rem;padding:.45rem .7rem;background:rgba(255,255,255,.03);border:1px solid var(--border);margin-bottom:.45rem;}
+.doc-ex-link{font-size:.68rem;color:var(--green);cursor:pointer;text-decoration:underline;flex:1;}
+.uprog{display:none;margin-top:.45rem;}
+.uprog.show{display:block;}
+.uprog-bg{height:3px;background:rgba(255,255,255,.08);border-radius:2px;margin-bottom:3px;}
+.uprog-fill{height:3px;background:var(--green);border-radius:2px;width:0%;transition:width .3s;}
+.uprog-lbl{font-size:.6rem;color:var(--gray);}
+.msg-err{display:none;margin-top:.65rem;padding:.65rem .85rem;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:#f87171;font-size:.75rem;}
+.msg-err.show{display:block;}
+/* LIGHTBOX */
+.lb{display:none;position:fixed;inset:0;background:rgba(0,0,0,.93);z-index:500;flex-direction:column;align-items:center;justify-content:center;}
+.lb.open{display:flex;}
+.lb-head{position:absolute;top:0;left:0;right:0;padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(rgba(0,0,0,.85),transparent);}
+.lb-title{font-size:.72rem;font-weight:300;color:var(--white);}
+.lb-acts{display:flex;gap:.65rem;align-items:center;}
+.lb-btn{display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border:1px solid rgba(255,255,255,.2);background:transparent;color:var(--white);font-family:var(--font);font-size:.65rem;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:all .2s;}
+.lb-btn:hover{border-color:var(--green);color:var(--green);}
+.lb-x{background:none;border:none;color:var(--gray);cursor:pointer;font-size:1.3rem;padding:0;}
+.lb-x:hover{color:var(--white);}
+.lb-body{max-width:90vw;max-height:85vh;display:flex;align-items:center;justify-content:center;}
+.lb-img{max-width:90vw;max-height:82vh;object-fit:contain;border:1px solid rgba(255,255,255,.1);}
+.lb-pdf{width:min(860px,90vw);height:82vh;border:none;}
+/* TOAST */
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--card);border:1px solid var(--gborder);padding:.75rem 1rem;font-size:.75rem;font-weight:300;z-index:300;display:none;align-items:center;gap:.65rem;max-width:320px;}
+.toast.show{display:flex;}
+.tdot{width:5px;height:5px;border-radius:50%;flex-shrink:0;background:var(--green);}
+.toast.err{border-color:rgba(239,68,68,.3);}
+.toast.err .tdot{background:var(--danger);}
+/* CONFERMA */
+.confirm-box{background:var(--card2);border:1px solid rgba(239,68,68,.3);padding:1rem 1.25rem;margin-bottom:1rem;}
+.confirm-txt{font-size:.82rem;font-weight:300;margin-bottom:.75rem;}
+.confirm-acts{display:flex;gap:.5rem;}
+@media(max-width:900px){nav{padding:0 1rem;}.hero,.main{padding-left:1rem;padding-right:1rem;}.stats{flex-wrap:wrap;}.fgrid{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
 <nav>
-  <a class="nav-logo" href="index.html"><span>·</span>KAPLET Academy</a>
-  <div class="nav-links">
-    <button class="nav-tab active" onclick="showSection('team',this)">Team</button>
-    <button class="nav-tab" onclick="showSection('scadenze',this)">Scadenze</button>
-    <button class="nav-tab" onclick="showSection('matrix',this)">Mappa cert.</button>
+  <a class="logo" href="index.html"><span>·</span>KAPLET Academy</a>
+  <div class="nav-tabs">
+    <button class="ntab active" onclick="showSec('team',this)">Team</button>
+    <button class="ntab" onclick="showSec('certs',this)">Certificazioni</button>
+    <button class="ntab" onclick="showSec('scad',this)">Scadenze</button>
+    <button class="ntab" onclick="showSec('mx',this)">Mappa</button>
+    <button class="ntab" onclick="showSec('tecnici',this)">Tecnici</button>
   </div>
-  <div class="nav-right">
+  <div class="nav-r">
     <a href="index.html" class="btn-nav">Catalogo</a>
-    <button class="btn-nav" id="btn-esci" onclick="doLogout()">Esci</button>
+    <button class="btn-nav" onclick="doLogout()">Esci</button>
   </div>
 </nav>
  
 <div class="hero">
   <div class="hero-inner">
-    <div class="hero-label">Pannello amministratore</div>
+    <div class="hero-lbl">Pannello amministratore</div>
     <h1>·KAPLET Academy</h1>
-    <p class="hero-sub">Panoramica certificazioni del team.</p>
-    <div class="stats-row">
-      <div class="stat"><div class="stat-num s-white" id="s-tec">—</div><div class="stat-label">Tecnici</div></div>
-      <div class="stat"><div class="stat-num s-green" id="s-att">—</div><div class="stat-label">Certificazioni attive</div></div>
-      <div class="stat"><div class="stat-num s-warn" id="s-s60">—</div><div class="stat-label">In scadenza (60gg)</div></div>
-      <div class="stat"><div class="stat-num s-danger" id="s-sca">—</div><div class="stat-label">Scadute</div></div>
+    <p class="hero-sub">Gestione completa certificazioni e team.</p>
+    <div class="stats">
+      <div class="stat"><div class="sn s-wh" id="s-tec">—</div><div class="sl">Tecnici</div></div>
+      <div class="stat"><div class="sn s-g"  id="s-att">—</div><div class="sl">Cert. attive</div></div>
+      <div class="stat"><div class="sn s-w"  id="s-s60">—</div><div class="sl">Scadenza 60gg</div></div>
+      <div class="stat"><div class="sn s-d"  id="s-sca">—</div><div class="sl">Scadute</div></div>
     </div>
   </div>
 </div>
  
 <div class="main">
-  <div class="section active" id="section-team">
-    <div class="section-header">
-      <div class="section-title">Tutti i tecnici</div>
-      <button class="btn-sm" onclick="openModal()">+ Aggiungi certificazione</button>
+ 
+  <!-- TAB: TEAM -->
+  <div class="sec active" id="sec-team">
+    <div class="sec-hd">
+      <div class="sec-title">Tutti i tecnici</div>
+      <button class="btn-sm" onclick="openCertModal()">+ Aggiungi certificazione</button>
     </div>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Tecnico</th><th>Ruolo</th><th>Certificazioni</th><th>Progresso</th></tr></thead>
-        <tbody id="team-body"><tr><td colspan="4" style="text-align:center;padding:2rem;color:var(--gray)">Caricamento...</td></tr></tbody>
-      </table>
-    </div>
+    <div class="tw"><table>
+      <thead><tr><th>Tecnico</th><th>Ruolo</th><th>Certificazioni</th><th>Progresso</th></tr></thead>
+      <tbody id="team-body"><tr><td colspan="4" style="text-align:center;padding:2rem;color:var(--gray)">Caricamento...</td></tr></tbody>
+    </table></div>
   </div>
  
-  <div class="section" id="section-scadenze">
-    <div class="section-header"><div class="section-title">Scadenze certificazioni</div></div>
-    <div class="scad-tabs">
-      <button class="scad-tab active" id="tab-prox" onclick="switchScadTab('prox',this)">In scadenza (60gg)</button>
-      <button class="scad-tab" id="tab-sca" onclick="switchScadTab('sca',this)">Già scadute</button>
+  <!-- TAB: CERTIFICAZIONI -->
+  <div class="sec" id="sec-certs">
+    <div class="sec-hd">
+      <div class="sec-title">Tutte le certificazioni</div>
+      <button class="btn-sm" onclick="openCertModal()">+ Aggiungi</button>
     </div>
-    <div class="scad-list" id="scad-body"></div>
+    <div class="tw"><table>
+      <thead><tr><th>Tecnico</th><th>Brand</th><th>Corso</th><th>Conseguita</th><th>Scadenza</th><th>Doc</th><th>Azioni</th></tr></thead>
+      <tbody id="certs-body"><tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--gray)">Caricamento...</td></tr></tbody>
+    </table></div>
   </div>
  
-  <div class="section" id="section-matrix">
-    <div class="section-header"><div class="section-title">Mappa certificazioni per brand</div></div>
-    <p style="font-size:.78rem;color:var(--gray);margin-bottom:1.5rem;font-weight:300">Verde = attiva · Giallo = in scadenza 60gg · Rosso = scaduta · Grigio = assente</p>
-    <div id="matrix-body" style="overflow-x:auto"></div>
+  <!-- TAB: SCADENZE -->
+  <div class="sec" id="sec-scad">
+    <div class="sec-hd"><div class="sec-title">Scadenze certificazioni</div></div>
+    <div class="stabs">
+      <button class="stab active" onclick="switchStab('prox',this)">In scadenza (60gg)</button>
+      <button class="stab" onclick="switchStab('sca',this)">Già scadute</button>
+    </div>
+    <div class="slist" id="scad-body"></div>
+  </div>
+ 
+  <!-- TAB: MAPPA -->
+  <div class="sec" id="sec-mx">
+    <div class="sec-hd"><div class="sec-title">Mappa certificazioni per brand</div></div>
+    <p style="font-size:.75rem;color:var(--gray);margin-bottom:1.25rem;font-weight:300">Verde = attiva · Giallo = in scadenza 60gg · Rosso = scaduta · Grigio = assente. Il nome del corso appare sotto il badge.</p>
+    <div class="mx-wrap"><div id="mx-body"></div></div>
+  </div>
+ 
+  <!-- TAB: TECNICI -->
+  <div class="sec" id="sec-tecnici">
+    <div class="sec-hd">
+      <div class="sec-title">Gestione tecnici</div>
+      <button class="btn-sm" onclick="openTecModal()">+ Aggiungi tecnico</button>
+    </div>
+    <div class="tw"><table>
+      <thead><tr><th>Nome</th><th>Email</th><th>Ruolo</th><th>Admin</th><th>Azioni</th></tr></thead>
+      <tbody id="tec-body"><tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--gray)">Caricamento...</td></tr></tbody>
+    </table></div>
+  </div>
+ 
+</div>
+ 
+<!-- TOAST -->
+<div class="toast" id="toast"><div class="tdot"></div><span id="toast-msg"></span></div>
+ 
+<!-- MODAL CERTIFICAZIONE -->
+<div class="ov" id="modal-cert">
+  <div class="modal">
+    <div class="modal-hd">
+      <div class="modal-title" id="cert-modal-title">Aggiungi certificazione</div>
+      <button class="modal-x" onclick="closeCertModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="cert-edit-id">
+      <input type="hidden" id="cert-doc-ex">
+      <div class="fg">
+        <label class="fl">Tecnico *</label>
+        <select class="fs" id="c-tec"><option value="">Seleziona...</option></select>
+      </div>
+      <div class="fg">
+        <label class="fl">Brand *</label>
+        <select class="fs" id="c-brand" onchange="fillCorsi()"><option value="">Seleziona brand...</option></select>
+      </div>
+      <div class="fg">
+        <label class="fl">Corso *</label>
+        <select class="fs" id="c-corso"><option value="">Prima seleziona brand...</option></select>
+      </div>
+      <div class="fgrid">
+        <div class="fg">
+          <label class="fl">Data conseguimento *</label>
+          <input type="date" class="fi" id="c-cons">
+        </div>
+        <div class="fg">
+          <label class="fl">Data scadenza</label>
+          <input type="date" class="fi" id="c-scad">
+          <div class="fhint">Lascia vuoto se non scade</div>
+        </div>
+      </div>
+      <div id="cert-doc-ex-wrap" style="display:none">
+        <label class="fl">Documento attuale</label>
+        <div class="doc-ex">
+          <span id="cert-doc-ex-ic">📄</span>
+          <span class="doc-ex-link" onclick="openLB(document.getElementById('cert-doc-ex').value,'Documento')">Visualizza / Scarica</span>
+          <button class="fsel-x" onclick="removeCertDocEx()">✕</button>
+        </div>
+      </div>
+      <div class="fg">
+        <label class="fl" id="cert-doc-lbl">Documento (PDF, JPG, PNG — max 10 MB)</label>
+        <div class="fzone" id="cert-fzone"
+          onclick="document.getElementById('cert-finput').click()"
+          ondragover="event.preventDefault();this.classList.add('over')"
+          ondragleave="this.classList.remove('over')"
+          ondrop="onCertDrop(event)">
+          <div class="fzone-ic">📎</div>
+          <div class="fzone-txt">Trascina qui o <strong>clicca per selezionare</strong></div>
+        </div>
+        <div class="fsel" id="cert-fsel">
+          <span id="cert-fsel-ic">📄</span>
+          <span class="fsel-nm" id="cert-fsel-nm"></span>
+          <button class="fsel-x" onclick="clearCertFile()">✕</button>
+        </div>
+        <div class="uprog" id="cert-uprog">
+          <div class="uprog-bg"><div class="uprog-fill" id="cert-uprog-fill"></div></div>
+          <div class="uprog-lbl" id="cert-uprog-lbl">Caricamento...</div>
+        </div>
+        <input type="file" id="cert-finput" accept=".pdf,.jpg,.jpeg,.png" style="display:none" onchange="onCertFileChange(this)">
+      </div>
+      <div class="fg">
+        <label class="fl">Note</label>
+        <input type="text" class="fi" id="c-note" placeholder="Es. numero certificato...">
+      </div>
+      <div class="msg-err" id="cert-err"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="closeCertModal()">Annulla</button>
+      <button class="btn-save" id="cert-save-btn" onclick="salvaCert()">Salva</button>
+    </div>
   </div>
 </div>
  
-<div class="toast" id="toast"><div class="toast-dot"></div><span id="toast-msg"></span></div>
- 
-<!-- MODAL -->
-<div class="modal-overlay" id="modal">
-  <div class="modal-box">
-    <div class="modal-header">
-      <div class="modal-title">Aggiungi certificazione</div>
-      <button class="modal-close" onclick="closeModal()">✕</button>
+<!-- MODAL TECNICO -->
+<div class="ov" id="modal-tec">
+  <div class="modal">
+    <div class="modal-hd">
+      <div class="modal-title" id="tec-modal-title">Aggiungi tecnico</div>
+      <button class="modal-x" onclick="closeTecModal()">✕</button>
     </div>
-    <div class="fld">
-      <label class="flabel">Tecnico *</label>
-      <select class="finput" id="m-tec"><option value="">Seleziona...</option></select>
-    </div>
-    <div class="fld">
-      <label class="flabel">Brand *</label>
-      <select class="finput" id="m-brand" onchange="fillCorsi()"><option value="">Seleziona brand...</option></select>
-    </div>
-    <div class="fld">
-      <label class="flabel">Corso *</label>
-      <select class="finput" id="m-corso"><option value="">Prima seleziona brand...</option></select>
-    </div>
-    <div class="fgrid">
-      <div class="fld">
-        <label class="flabel">Data conseguimento *</label>
-        <input type="date" class="finput" id="m-cons">
+    <div class="modal-body">
+      <input type="hidden" id="tec-edit-id">
+      <div class="fgrid">
+        <div class="fg">
+          <label class="fl">Nome *</label>
+          <input type="text" class="fi" id="t-nome" placeholder="Mario">
+        </div>
+        <div class="fg">
+          <label class="fl">Cognome *</label>
+          <input type="text" class="fi" id="t-cogn" placeholder="Rossi">
+        </div>
       </div>
-      <div class="fld">
-        <label class="flabel">Data scadenza</label>
-        <input type="date" class="finput" id="m-scad">
+      <div class="fg">
+        <label class="fl">Email *</label>
+        <input type="email" class="fi" id="t-email" placeholder="mario.rossi@kaplet.it">
       </div>
+      <div class="fg" id="t-pwd-wrap">
+        <label class="fl">Password *</label>
+        <input type="password" class="fi" id="t-pwd" placeholder="Min. 8 caratteri">
+        <div class="fhint">Comunicala al tecnico — potrà cambiarla dopo il primo accesso</div>
+      </div>
+      <div class="fg">
+        <label class="fl">Ruolo *</label>
+        <select class="fs" id="t-ruolo"><option value="">Seleziona ruolo...</option></select>
+      </div>
+      <div class="fg">
+        <label class="fl">Permessi</label>
+        <select class="fs" id="t-admin">
+          <option value="false">Tecnico standard</option>
+          <option value="true">Amministratore</option>
+        </select>
+      </div>
+      <div class="msg-err" id="tec-err"></div>
     </div>
-    <div class="fld">
-      <label class="flabel">Note</label>
-      <input type="text" class="finput" id="m-note" placeholder="Es. numero certificato...">
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="closeTecModal()">Annulla</button>
+      <button class="btn-save" id="tec-save-btn" onclick="salvaTec()">Salva</button>
     </div>
-    <button class="btn-primary" id="btn-salva" onclick="salvaCert()">Salva certificazione</button>
-    <div class="msg-error" id="m-err"></div>
   </div>
 </div>
  
-<!-- LIGHTBOX preview documento -->
-<div class="lightbox" id="lightbox">
-  <div class="lightbox-header">
-    <div class="lightbox-title" id="lightbox-title">Documento</div>
-    <div class="lightbox-actions">
-      <button class="lightbox-btn" onclick="scaricaDoc()">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Scarica
-      </button>
-      <button class="lightbox-btn" onclick="apriEsterno()">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        Apri
-      </button>
-      <button class="lightbox-close" onclick="chiudiLightbox()">✕</button>
+<!-- LIGHTBOX -->
+<div class="lb" id="lb" onclick="if(event.target===this)closeLB()">
+  <div class="lb-head">
+    <div class="lb-title" id="lb-title">Documento</div>
+    <div class="lb-acts">
+      <button class="lb-btn" onclick="dlDoc()">↓ Scarica</button>
+      <button class="lb-btn" onclick="extDoc()">↗ Apri</button>
+      <button class="lb-x" onclick="closeLB()">✕</button>
     </div>
   </div>
-  <div class="lightbox-content" id="lightbox-content"></div>
+  <div class="lb-body" id="lb-body"></div>
 </div>
  
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/courses.js"></script>
 <script>
-// ============================================================
-// FALLBACK: se courses.js non è caricato correttamente
-// ============================================================
-if (typeof COURSES === 'undefined') {
-  console.warn('courses.js non caricato, COURSES impostato a []');
-  window.COURSES = [];
-}
+window.COURSES      = window.COURSES      || [];
+window.BRAND_COLORS = window.BRAND_COLORS || {};
+window.ROLES        = window.ROLES        || [];
  
-// ============================================================
-// CONFIG
-// ============================================================
 const SB = supabase.createClient(
   'https://mcgerrvorboagkukzuzc.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1jZ2VycnZvcmJvYWdrdWt6dXpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4NjEyNzIsImV4cCI6MjA5MzQzNzI3Mn0.eDHZ-QUQLM2tFU4KPDEiIqXZsdfk_Cxnz7Ywxt6T46o'
 );
  
-let TECNICI = [], CERTS = [];
-let scadTabAttivo = 'prox'; // tab attivo nella sezione scadenze
+let TECNICI=[], CERTS=[], stabAttivo='prox', certFileObj=null, certEditId=null, lbUrl='';
  
-// ============================================================
-// UTILS — calcola iniziali da nome e cognome
-// ============================================================
-function initiali(t) {
-  const n = (t.nome || '').trim()[0] || '';
-  const c = (t.cognome || '').trim()[0] || '';
-  return (n + c).toUpperCase();
-}
- 
-// ============================================================
-// INIT — getSession diretto, niente onAuthStateChange
-// ============================================================
-(async () => {
+// ── INIT ─────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', async () => {
   try {
-    const { data: { session } } = await SB.auth.getSession();
-    if (!session) { window.location.replace('login.html'); return; }
- 
-    const { data: me, error } = await SB
-      .from('tecnici').select('is_admin').eq('id', session.user.id).single();
- 
-    // FIX: is_admin deve essere esplicitamente true (non null, non false)
-    if (error || !me || me.is_admin !== true) {
-      window.location.replace('tecnico.html'); return;
-    }
- 
+    const { data:{ session } } = await SB.auth.getSession();
+    if (!session) { location.replace('login.html'); return; }
+    const { data: me } = await SB.from('tecnici').select('is_admin').eq('id', session.user.id).single();
+    if (!me || me.is_admin !== true) { location.replace('tecnico.html'); return; }
+    fillRuoliSelect();
     await load();
-  } catch(e) {
-    console.error(e);
-    window.location.replace('login.html');
-  }
-})();
+  } catch(e) { console.error(e); location.replace('login.html'); }
+});
  
-// ============================================================
-// LOGOUT
-// ============================================================
-async function doLogout() {
-  const btn = document.getElementById('btn-esci');
-  btn.textContent = '...';
-  btn.disabled = true;
-  try { await SB.auth.signOut(); } catch(e) {}
-  for (const k of Object.keys(localStorage)) {
-    if (k.startsWith('sb-') || k.includes('supabase')) localStorage.removeItem(k);
-  }
-  window.location.replace('login.html');
-}
+async function doLogout() { await SB.auth.signOut(); location.replace('login.html'); }
  
-// ============================================================
-// CARICA DATI
-// ============================================================
+// ── LOAD ──────────────────────────────────────────────────
 async function load() {
-  const [r1, r2] = await Promise.all([
+  const [r1,r2] = await Promise.all([
     SB.from('tecnici').select('*').order('cognome'),
-    SB.from('certificazioni').select('*').order('inserita_il', { ascending: false })
+    SB.from('certificazioni').select('*').order('data_conseguimento',{ascending:false})
   ]);
- 
-  TECNICI = r1.data || [];
-  CERTS   = r2.data || [];
- 
-  const oggi = new Date();
-  const att  = CERTS.filter(c => c.stato === 'attiva' && (!c.data_scadenza || new Date(c.data_scadenza) >= oggi));
-  const sca  = CERTS.filter(c => c.stato === 'scaduta' || (c.data_scadenza && new Date(c.data_scadenza) < oggi));
-  // "In scadenza 60gg" = attive CON scadenza entro 60 giorni (positivi ≤ 60)
-  const s60  = att.filter(c => c.data_scadenza && gg(c.data_scadenza) >= 0 && gg(c.data_scadenza) <= 60);
- 
+  TECNICI = r1.data||[]; CERTS = r2.data||[];
+  const oggi=new Date();
+  const att = CERTS.filter(c=>c.stato==='attiva'&&(!c.data_scadenza||new Date(c.data_scadenza)>=oggi));
+  const sca = CERTS.filter(c=>c.stato==='scaduta'||(c.data_scadenza&&new Date(c.data_scadenza)<oggi));
+  const s60 = att.filter(c=>{ const g=gg(c.data_scadenza); return g!==null&&g>=0&&g<=60; });
   document.getElementById('s-tec').textContent = TECNICI.length;
   document.getElementById('s-att').textContent = att.length;
   document.getElementById('s-s60').textContent = s60.length;
   document.getElementById('s-sca').textContent = sca.length;
- 
-  renderTeam();
-  renderScad();
-  renderMatrix();
+  renderTeam(); renderCerts(); renderScad(); renderMx(); renderTecnici();
 }
  
-// ============================================================
-// UTILS
-// ============================================================
-const BC = {
-  "AVIXA":"#F59E0B","DANTE":"#EF4444","NDI":"#38BDF8","AXIS":"#4ADE80",
-  "FORTINET":"#F87171","CISCO":"#22D3EE","CRESTRON":"#4ADE80","BARCO CTRL":"#FB923C",
-  "BARCO VIDEO":"#FBBF24","NOVASTAR":"#C084FC","MILESTONE":"#F472B6",
-  "ALTA ACCESS":"#38BDF8","ALTA VIDEO":"#60A5FA","AVIGILON UNITY":"#818CF8",
-  "SHURE":"#A78BFA","Q-SYS":"#F87171","YAMAHA":"#FCD34D","POWERSOFT":"#34D399",
-  "TELEVIC":"#A78BFA","EXTRON":"#F87171","K-ARRAY":"#4ADE80","K-SCAPE":"#34D399",
-  "BRIGHTSIGN":"#60A5FA","ELMO":"#FCA5A1","KSENIA":"#C084FC","NOTIFIER":"#FB923C",
-  "TECNOFIRE":"#F87171","KNX & DALI":"#818CF8","MAXHUB":"#38BDF8"
-};
+// ── UTILS ─────────────────────────────────────────────────
+const gg  = d=>d?Math.ceil((new Date(d)-new Date())/864e5):null;
+const fmt = d=>d?new Date(d).toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric'}):'—';
+const ini = t=>((t.nome||'')[0]||'').toUpperCase()+((t.cognome||'')[0]||'').toUpperCase();
+const bc  = b=>(BRAND_COLORS||{})[b]||'#36CD81';
+const enc = s=>encodeURIComponent(s||'');
  
-const bc  = b => BC[b] || '#36CD81';
-// Restituisce giorni interi rimanenti (negativo = già scaduta)
-const gg  = d => d ? Math.ceil((new Date(d) - new Date()) / 86400000) : null;
-const fmt = d => d ? new Date(d).toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric'}) : '—';
-const escUrl = s => encodeURIComponent(s || '');
+// ── NAVIGAZIONE ───────────────────────────────────────────
+function showSec(id,btn) {
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  btn.classList.add('active');
+}
  
-// ============================================================
-// RENDER TEAM
-// ============================================================
+// ── RENDER TEAM ───────────────────────────────────────────
 function renderTeam() {
-  const oggi = new Date();
-  document.getElementById('team-body').innerHTML = TECNICI.length === 0
-    ? '<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--gray)">Nessun tecnico</td></tr>'
-    : TECNICI.map(t => {
-        const certs = CERTS.filter(c => c.tech_id === t.id);
-        const att   = certs.filter(c => c.stato === 'attiva' && (!c.data_scadenza || new Date(c.data_scadenza) >= oggi));
-        const pills = certs.map(c => {
-          const g   = gg(c.data_scadenza);
-          const isS = c.data_scadenza && new Date(c.data_scadenza) < oggi;
-          const cls = isS ? 'p-scad' : (g !== null && g <= 60 ? 'p-warn' : 'p-ok');
-          // se ha documento mostra pin
-          const docPin = c.documento_url
-            ? `<button class="btn-doc" onclick="apriLightbox('${escUrl(c.documento_url)}','${escUrl(c.brand+' — '+c.corso)}')" title="Vedi documento">📄</button>`
-            : '';
-          return `<span style="display:inline-flex;align-items:center;gap:3px;margin:2px">
-            <span class="pill ${cls}" style="border-color:${bc(c.brand)}44" title="${c.corso}">${c.brand}</span>${docPin}
-          </span>`;
+  const oggi=new Date();
+  document.getElementById('team-body').innerHTML = !TECNICI.length
+    ? '<tr><td colspan="4" style="text-align:center;padding:2rem;color:var(--gray)">Nessun tecnico</td></tr>'
+    : TECNICI.map(t=>{
+        const certs=CERTS.filter(c=>c.tech_id===t.id);
+        const att=certs.filter(c=>c.stato==='attiva'&&(!c.data_scadenza||new Date(c.data_scadenza)>=oggi));
+        const pills=certs.map(c=>{
+          const g=gg(c.data_scadenza), isS=c.data_scadenza&&new Date(c.data_scadenza)<oggi;
+          const cls=isS?'p-no':(g!==null&&g<=60?'p-wa':'p-ok');
+          const doc=c.documento_url?`<button class="btn-doc" onclick="openLB('${enc(c.documento_url)}','${enc(c.brand+' — '+c.corso)}')">📄</button>`:'';
+          return `<span style="display:inline-flex;align-items:center;gap:2px"><span class="pill ${cls}" style="border-color:${bc(c.brand)}44" title="${c.corso}">${c.brand}</span>${doc}</span>`;
         }).join('');
-        const pct = Math.min(100, att.length * 10);
+        const pct=Math.min(100,att.length*10);
         return `<tr>
-          <td><div class="tec-info"><div class="av">${initiali(t)}</div><div><div class="tec-nome">${t.nome} ${t.cognome}</div><div class="tec-email">${t.email}</div></div></div></td>
-          <td style="color:var(--gray);font-size:.75rem">${t.ruolo || '—'}</td>
-          <td><div class="pills">${pills||'<span style="font-size:.7rem;color:rgba(255,255,255,.2)">Nessuna</span>'}</div><div style="font-size:.62rem;color:var(--gray);margin-top:4px">${att.length} attive · ${certs.length} totali</div></td>
-          <td><div style="min-width:100px"><div class="prog-bg"><div class="prog-fill" style="width:${pct}%"></div></div><div class="prog-label">${att.length} cert.</div></div></td>
+          <td><div class="tec-info"><div class="av">${ini(t)}</div><div><div class="tec-nome">${t.nome} ${t.cognome}</div><div class="tec-email">${t.email}</div></div></div></td>
+          <td style="color:var(--gray);font-size:.72rem">${t.ruolo||'—'}</td>
+          <td><div class="pills">${pills||'<span style="font-size:.68rem;color:rgba(255,255,255,.2)">Nessuna</span>'}</div>
+            <div style="font-size:.6rem;color:var(--gray);margin-top:3px">${att.length} attive · ${certs.length} totali</div></td>
+          <td><div style="min-width:90px"><div class="prog-bg"><div class="prog-fill" style="width:${pct}%"></div></div><div class="prog-lbl">${att.length}</div></div></td>
         </tr>`;
       }).join('');
 }
  
-// ============================================================
-// RENDER SCADENZE (con tab: "prossime" vs "già scadute")
-// ============================================================
-function switchScadTab(tab, btn) {
-  scadTabAttivo = tab;
-  document.querySelectorAll('.scad-tab').forEach(t => t.classList.remove('active'));
-  btn.classList.add('active');
-  renderScad();
+// ── RENDER CERTIFICAZIONI ─────────────────────────────────
+function renderCerts() {
+  const oggi=new Date();
+  document.getElementById('certs-body').innerHTML = !CERTS.length
+    ? '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--gray)">Nessuna certificazione</td></tr>'
+    : CERTS.map(c=>{
+        const t=TECNICI.find(x=>x.id===c.tech_id);
+        const g=gg(c.data_scadenza), isS=c.data_scadenza&&new Date(c.data_scadenza)<oggi;
+        const scCl=isS?'color:var(--danger)':(g!==null&&g<=60?'color:var(--warn)':'color:var(--gray)');
+        const doc=c.documento_url?`<button class="btn-doc" onclick="openLB('${enc(c.documento_url)}','${enc(c.brand+' — '+c.corso)}')">📄</button>`:'-';
+        return `<tr>
+          <td><div class="tec-info"><div class="av" style="width:24px;height:24px;font-size:.52rem">${t?ini(t):'?'}</div><span style="font-size:.78rem">${t?t.nome+' '+t.cognome:'—'}</span></div></td>
+          <td><span style="font-size:.62rem;color:${bc(c.brand)}">${c.brand}</span></td>
+          <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${c.corso}">${c.corso}</td>
+          <td style="color:var(--gray)">${fmt(c.data_conseguimento)}</td>
+          <td style="${scCl}">${fmt(c.data_scadenza)}${g!==null&&!isS?` <span style="font-size:.6rem">(${g}gg)</span>`:''}</td>
+          <td>${doc}</td>
+          <td><div class="act-btns">
+            <button class="btn-xs btn-xs-g" onclick="openCertModal('${c.id}')">✏ Modifica</button>
+            <button class="btn-xs btn-xs-e" onclick="delCert('${c.id}','${(c.corso||'').replace(/'/g,"\\'")}')">✕</button>
+          </div></td>
+        </tr>`;
+      }).join('');
 }
  
+// ── RENDER SCADENZE ───────────────────────────────────────
+function switchStab(tab,btn) {
+  stabAttivo=tab;
+  document.querySelectorAll('.stab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active'); renderScad();
+}
 function renderScad() {
-  const oggi = new Date();
- 
-  let lista;
-  if (scadTabAttivo === 'prox') {
-    // Prossime: scadenza nei prossimi 60 giorni (0..60)
-    lista = CERTS
-      .filter(c => c.data_scadenza && gg(c.data_scadenza) >= 0 && gg(c.data_scadenza) <= 60)
-      .sort((a,b) => new Date(a.data_scadenza) - new Date(b.data_scadenza));
-  } else {
-    // Già scadute: gg < 0 oppure stato = 'scaduta'
-    lista = CERTS
-      .filter(c => c.stato === 'scaduta' || (c.data_scadenza && new Date(c.data_scadenza) < oggi))
-      .sort((a,b) => new Date(b.data_scadenza) - new Date(a.data_scadenza));
-  }
- 
-  const emptyMsg = scadTabAttivo === 'prox'
-    ? 'Nessuna scadenza nei prossimi 60 giorni'
-    : 'Nessuna certificazione scaduta';
- 
-  document.getElementById('scad-body').innerHTML = lista.length === 0
-    ? `<div class="empty"><div class="empty-icon">✓</div><div class="empty-title">${emptyMsg}</div></div>`
-    : lista.map(c => {
-        const g  = gg(c.data_scadenza);
-        const t  = TECNICI.find(x => x.id === c.tech_id);
-        const isS = g !== null && g < 0;
-        const cls = (isS || g === 0) ? 'u-danger' : g <= 7 ? 'u-danger' : g <= 30 ? 'u-warn' : 'u-ok';
-        const lbl = isS ? `SCADUTA ${Math.abs(g)}gg fa` : `${g}gg`;
-        return `<div class="scad-item">
-          <span class="scad-urg ${cls}">${lbl}</span>
-          <div class="scad-info"><div class="scad-nome">${t ? t.nome+' '+t.cognome : '—'}</div><div class="scad-corso">${c.brand} — ${c.corso}</div></div>
-          <div class="scad-data">${fmt(c.data_scadenza)}</div>
-          ${c.documento_url ? `<button class="btn-doc" onclick="apriLightbox('${escUrl(c.documento_url)}','${escUrl((t?t.nome+' '+t.cognome:'')+ ' — '+c.brand+' — '+c.corso)}')">📄 Documento</button>` : ''}
+  const oggi=new Date();
+  let lista = stabAttivo==='prox'
+    ? CERTS.filter(c=>c.data_scadenza&&gg(c.data_scadenza)>=0&&gg(c.data_scadenza)<=60).sort((a,b)=>new Date(a.data_scadenza)-new Date(b.data_scadenza))
+    : CERTS.filter(c=>c.stato==='scaduta'||(c.data_scadenza&&new Date(c.data_scadenza)<oggi)).sort((a,b)=>new Date(b.data_scadenza)-new Date(a.data_scadenza));
+  const em=stabAttivo==='prox'?'Nessuna scadenza nei prossimi 60 giorni':'Nessuna certificazione scaduta';
+  document.getElementById('scad-body').innerHTML = !lista.length
+    ? `<div class="empty"><div class="empty-ic">✓</div><div class="empty-t">${em}</div></div>`
+    : lista.map(c=>{
+        const g=gg(c.data_scadenza), t=TECNICI.find(x=>x.id===c.tech_id);
+        const isS=g!==null&&g<0;
+        const cls=(isS||g===0)?'u-d':g<=7?'u-d':g<=30?'u-w':'u-ok';
+        const lbl=isS?`SCADUTA ${Math.abs(g)}gg fa`:`${g}gg`;
+        const doc=c.documento_url?`<button class="btn-doc" onclick="openLB('${enc(c.documento_url)}','${enc((t?t.nome+' '+t.cognome:'')+'— '+c.brand)}')">📄</button>`:'';
+        return `<div class="sitem">
+          <span class="surg ${cls}">${lbl}</span>
+          <div class="sinfo"><div class="s-nome">${t?t.nome+' '+t.cognome:'—'}</div><div class="s-corso">${c.brand} — ${c.corso}</div></div>
+          <div class="s-data">${fmt(c.data_scadenza)}</div>
+          ${doc}
+          <div class="act-btns">
+            <button class="btn-xs btn-xs-g" onclick="openCertModal('${c.id}')">✏</button>
+            <button class="btn-xs btn-xs-e" onclick="delCert('${c.id}','${(c.corso||'').replace(/'/g,"\\'")}')">✕</button>
+          </div>
         </div>`;
       }).join('');
 }
  
-// ============================================================
-// RENDER MATRIX
-// ============================================================
-function renderMatrix() {
-  const oggi  = new Date();
-  const brands = [...new Set(CERTS.map(c => c.brand))].sort();
-  const el     = document.getElementById('matrix-body');
- 
-  if (!brands.length || !TECNICI.length) {
-    el.innerHTML = '<div class="empty"><div class="empty-icon">◌</div><div class="empty-title">Nessuna certificazione ancora</div></div>';
-    return;
-  }
- 
-  // FIX: usa initiali() invece di t.avatar per gli header della matrice
-  let h = `<div class="mx-header"><div class="mh-cell mh-brand">Brand</div>${
-    TECNICI.map(t => `<div class="mh-cell" title="${t.nome} ${t.cognome}">${initiali(t)}</div>`).join('')
-  }</div>`;
- 
-  brands.forEach(b => {
-    h += `<div class="mx-row"><div class="mx-brand"><div class="mdot" style="background:${bc(b)}"></div><div class="mname">${b}</div></div>`;
-    TECNICI.forEach(t => {
-      const c = CERTS.find(x => x.tech_id === t.id && x.brand === b);
-      if (!c) { h += `<div class="mx-cell"><span class="mb mb-none">—</span></div>`; return; }
-      const g    = gg(c.data_scadenza);
-      const isS  = c.data_scadenza && new Date(c.data_scadenza) < oggi;
-      // FIX: distingui scaduta (rosso) da in scadenza (giallo) da attiva (verde)
-      const cls  = isS ? 'mb-scad' : (g !== null && g <= 60 ? 'mb-warn' : 'mb-ok');
-      const lbl  = isS ? '✕' : (g !== null && g <= 60 ? `${g}gg` : '✓');
-      h += `<div class="mx-cell" title="${c.corso} — ${fmt(c.data_scadenza)}"><span class="mb ${cls}">${lbl}</span></div>`;
+// ── RENDER MAPPA ──────────────────────────────────────────
+function renderMx() {
+  const oggi=new Date(), brands=[...new Set(CERTS.map(c=>c.brand))].sort();
+  const el=document.getElementById('mx-body');
+  if (!brands.length||!TECNICI.length) { el.innerHTML='<div class="empty"><div class="empty-ic">◌</div><div class="empty-t">Nessuna certificazione</div></div>'; return; }
+  let h=`<div class="mx-hd"><div class="mhc mhb">Brand</div>${TECNICI.map(t=>`<div class="mhc" title="${t.nome} ${t.cognome}">${ini(t)}<br><span style="font-size:.5rem;font-weight:300">${(t.nome||'').split(' ')[0]}</span></div>`).join('')}</div>`;
+  brands.forEach(b=>{
+    h+=`<div class="mx-row"><div class="mbrand"><div class="mdot" style="background:${bc(b)}"></div><div class="mname">${b}</div></div>`;
+    TECNICI.forEach(t=>{
+      const c=CERTS.find(x=>x.tech_id===t.id&&x.brand===b);
+      if (!c) { h+=`<div class="mcell"><span class="mb mb-none">—</span></div>`; return; }
+      const g=gg(c.data_scadenza), isS=c.data_scadenza&&new Date(c.data_scadenza)<oggi;
+      const cls=isS?'mb-no':(g!==null&&g<=60?'mb-wa':'mb-ok');
+      const lbl=isS?'✕':(g!==null&&g<=60?`${g}gg`:'✓');
+      // Nome corso troncato + doc btn
+      const corsoShort=(c.corso||'').length>18?c.corso.substring(0,16)+'…':c.corso;
+      const doc=c.documento_url?`<button class="btn-doc" style="font-size:.5rem;padding:1px 5px;margin-top:3px" onclick="openLB('${enc(c.documento_url)}','${enc(c.brand+' — '+c.corso)}')">📄</button>`:'';
+      h+=`<div class="mcell" title="${c.corso} · ${fmt(c.data_scadenza)}">
+        <div class="mc-inner">
+          <span class="mb ${cls}">${lbl}</span>
+          <span class="mc-corso" title="${c.corso}">${corsoShort}</span>
+          ${doc}
+        </div>
+      </div>`;
     });
-    h += '</div>';
+    h+='</div>';
   });
- 
-  el.innerHTML = h;
+  el.innerHTML=h;
 }
  
-// ============================================================
-// NAVIGAZIONE
-// ============================================================
-function showSection(id, btn) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('section-'+id).classList.add('active');
-  btn.classList.add('active');
+// ── RENDER TECNICI ────────────────────────────────────────
+function renderTecnici() {
+  document.getElementById('tec-body').innerHTML = !TECNICI.length
+    ? '<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--gray)">Nessun tecnico</td></tr>'
+    : TECNICI.map(t=>`<tr>
+        <td><div class="tec-info"><div class="av">${ini(t)}</div><div><div class="tec-nome">${t.nome} ${t.cognome}</div></div></div></td>
+        <td style="color:var(--gray)">${t.email}</td>
+        <td><span class="badge-ruolo">${t.ruolo||'—'}</span></td>
+        <td>${t.is_admin?'<span class="badge-ruolo badge-admin">Admin</span>':'<span style="color:rgba(255,255,255,.25);font-size:.7rem">—</span>'}</td>
+        <td><div class="act-btns">
+          <button class="btn-xs btn-xs-g" onclick="openTecModal('${t.id}')">✏ Modifica</button>
+          <button class="btn-xs btn-xs-e" onclick="delTec('${t.id}','${(t.nome+' '+t.cognome).replace(/'/g,"\\'")}')">✕ Elimina</button>
+        </div></td>
+      </tr>`).join('');
 }
  
-// ============================================================
-// MODAL
-// ============================================================
-function openModal() {
-  // Tecnici
-  document.getElementById('m-tec').innerHTML =
-    '<option value="">Seleziona...</option>' +
-    TECNICI.map(t => `<option value="${t.id}">${t.nome} ${t.cognome}</option>`).join('');
+// ── MODAL CERTIFICAZIONE ──────────────────────────────────
+function openCertModal(certId) {
+  certEditId=certId||null; certFileObj=null;
+  clearCertFile(); hideCertProgress();
+  // Popola tecnici
+  const selT=document.getElementById('c-tec');
+  selT.innerHTML='<option value="">Seleziona...</option>';
+  TECNICI.forEach(t=>selT.add(new Option(`${t.nome} ${t.cognome}`,t.id)));
+  // Popola brand
+  const selB=document.getElementById('c-brand');
+  selB.innerHTML='<option value="">Seleziona brand...</option>';
+  [...new Set((COURSES||[]).map(c=>c.brand))].sort().forEach(b=>selB.add(new Option(b,b)));
+  document.getElementById('c-corso').innerHTML='<option value="">Prima seleziona brand...</option>';
  
-  // Brand da courses.js (con fallback sicuro)
-  const courses = (typeof COURSES !== 'undefined' && Array.isArray(COURSES)) ? COURSES : [];
-  const brands  = [...new Set(courses.map(c => c.brand))].sort();
-  document.getElementById('m-brand').innerHTML =
-    '<option value="">Seleziona brand...</option>' +
-    brands.map(b => `<option value="${b}">${b}</option>`).join('');
- 
-  document.getElementById('m-corso').innerHTML = '<option value="">Prima seleziona brand...</option>';
-  document.getElementById('m-cons').value = new Date().toISOString().split('T')[0];
-  document.getElementById('m-scad').value = '';
-  document.getElementById('m-note').value = '';
-  document.getElementById('m-err').classList.remove('show');
-  document.getElementById('modal').classList.add('open');
+  if (certEditId) {
+    const c=CERTS.find(x=>x.id===certEditId);
+    document.getElementById('cert-modal-title').textContent='Modifica certificazione';
+    document.getElementById('cert-edit-id').value=certEditId;
+    selT.value=c.tech_id; selB.value=c.brand; fillCorsi();
+    document.getElementById('c-corso').value=c.corso;
+    document.getElementById('c-cons').value=c.data_conseguimento||'';
+    document.getElementById('c-scad').value=c.data_scadenza||'';
+    document.getElementById('c-note').value=c.note||'';
+    if (c.documento_url) {
+      document.getElementById('cert-doc-ex').value=c.documento_url;
+      document.getElementById('cert-doc-ex-ic').textContent=/\.pdf/i.test(c.documento_url)?'📄':'🖼️';
+      document.getElementById('cert-doc-ex-wrap').style.display='block';
+      document.getElementById('cert-doc-lbl').textContent='Sostituisci documento (opzionale)';
+    } else {
+      document.getElementById('cert-doc-ex').value='';
+      document.getElementById('cert-doc-ex-wrap').style.display='none';
+      document.getElementById('cert-doc-lbl').textContent='Documento (PDF, JPG, PNG — max 10 MB)';
+    }
+  } else {
+    document.getElementById('cert-modal-title').textContent='Aggiungi certificazione';
+    document.getElementById('cert-edit-id').value='';
+    document.getElementById('cert-doc-ex').value='';
+    document.getElementById('c-cons').value=new Date().toISOString().split('T')[0];
+    document.getElementById('c-scad').value='';
+    document.getElementById('c-note').value='';
+    document.getElementById('cert-doc-ex-wrap').style.display='none';
+    document.getElementById('cert-doc-lbl').textContent='Documento (PDF, JPG, PNG — max 10 MB)';
+  }
+  document.getElementById('cert-err').classList.remove('show');
+  document.getElementById('modal-cert').classList.add('open');
 }
- 
-function closeModal() {
-  document.getElementById('modal').classList.remove('open');
+function closeCertModal() { document.getElementById('modal-cert').classList.remove('open'); }
+function removeCertDocEx() {
+  document.getElementById('cert-doc-ex').value='__REMOVE__';
+  document.getElementById('cert-doc-ex-wrap').style.display='none';
+  document.getElementById('cert-doc-lbl').textContent='Documento (PDF, JPG, PNG — max 10 MB)';
 }
- 
 function fillCorsi() {
-  const b   = document.getElementById('m-brand').value;
-  const sel = document.getElementById('m-corso');
-  if (!b) { sel.innerHTML = '<option value="">Prima seleziona brand...</option>'; return; }
-  const courses = (typeof COURSES !== 'undefined' && Array.isArray(COURSES)) ? COURSES : [];
-  const corsi   = courses.filter(c => c.brand === b);
-  sel.innerHTML = corsi.length
-    ? '<option value="">Seleziona corso...</option>' + corsi.map(c => `<option value="${c.name}">${c.name}</option>`).join('')
-    : '<option value="">Nessun corso disponibile</option>';
+  const b=document.getElementById('c-brand').value, sel=document.getElementById('c-corso');
+  sel.innerHTML='';
+  if (!b) { sel.add(new Option('Prima seleziona brand...','')); return; }
+  (COURSES||[]).filter(c=>c.brand===b).forEach(c=>sel.add(new Option(c.name,c.name)));
 }
+function onCertDrop(e) { e.preventDefault(); document.getElementById('cert-fzone').classList.remove('over'); if(e.dataTransfer.files[0]) setCertFile(e.dataTransfer.files[0]); }
+function onCertFileChange(inp) { if(inp.files[0]) setCertFile(inp.files[0]); }
+function setCertFile(f) {
+  if(f.size>10*1024*1024){toast('File troppo grande','err');return;}
+  const ext=f.name.split('.').pop().toLowerCase();
+  if(!['pdf','jpg','jpeg','png'].includes(ext)){toast('Formato non supportato','err');return;}
+  certFileObj=f;
+  document.getElementById('cert-fsel-ic').textContent=ext==='pdf'?'📄':'🖼️';
+  document.getElementById('cert-fsel-nm').textContent=f.name;
+  document.getElementById('cert-fsel').classList.add('show');
+}
+function clearCertFile() { certFileObj=null; document.getElementById('cert-fsel').classList.remove('show'); const fi=document.getElementById('cert-finput'); if(fi) fi.value=''; }
+function setCertProgress(pct,lbl) { document.getElementById('cert-uprog').classList.add('show'); document.getElementById('cert-uprog-fill').style.width=pct+'%'; document.getElementById('cert-uprog-lbl').textContent=lbl; }
+function hideCertProgress() { document.getElementById('cert-uprog').classList.remove('show'); }
  
 async function salvaCert() {
-  const techId = document.getElementById('m-tec').value;
-  const brand  = document.getElementById('m-brand').value;
-  const corso  = document.getElementById('m-corso').value;
-  const cons   = document.getElementById('m-cons').value;
-  const scad   = document.getElementById('m-scad').value;
-  const note   = document.getElementById('m-note').value;
-  const errEl  = document.getElementById('m-err');
-  const btn    = document.getElementById('btn-salva');
+  const techId=document.getElementById('c-tec').value;
+  const brand=document.getElementById('c-brand').value;
+  const corso=document.getElementById('c-corso').value;
+  const cons=document.getElementById('c-cons').value;
+  const scad=document.getElementById('c-scad').value;
+  const note=document.getElementById('c-note').value;
+  const docEx=document.getElementById('cert-doc-ex').value;
+  const errEl=document.getElementById('cert-err');
+  errEl.classList.remove('show');
+  if (!techId||!brand||!corso||!cons) { errEl.textContent='Compila tutti i campi obbligatori (*)'; errEl.classList.add('show'); return; }
+  const btn=document.getElementById('cert-save-btn');
+  btn.disabled=true; btn.textContent='Salvataggio…';
+  try {
+    let docUrl=null;
+    if (certFileObj) {
+      setCertProgress(20,'Caricamento…');
+      const ext=certFileObj.name.split('.').pop().toLowerCase();
+      const path=`admin/${Date.now()}.${ext}`;
+      setCertProgress(50,'Invio…');
+      const {error:upErr}=await SB.storage.from('certificati').upload(path,certFileObj,{upsert:false});
+      if(upErr) throw upErr;
+      setCertProgress(85,'URL…');
+      const {data:ud}=SB.storage.from('certificati').getPublicUrl(path);
+      docUrl=ud.publicUrl;
+      setCertProgress(100,'Fatto!');
+      await new Promise(r=>setTimeout(r,400));
+      hideCertProgress();
+    }
+    const payload={brand,corso,data_conseguimento:cons,data_scadenza:scad||null,note:note||null};
+    if(docUrl) payload.documento_url=docUrl;
+    else if(docEx==='__REMOVE__') payload.documento_url=null;
+    const editId=document.getElementById('cert-edit-id').value;
+    if (editId) {
+      const {error}=await SB.from('certificazioni').update(payload).eq('id',editId);
+      if(error) throw error; toast('Certificazione aggiornata!');
+    } else {
+      payload.tech_id=techId; payload.stato='attiva';
+      const {error}=await SB.from('certificazioni').insert(payload);
+      if(error) throw error; toast('Certificazione aggiunta!');
+    }
+    closeCertModal(); await load();
+  } catch(err) { console.error(err); hideCertProgress(); errEl.textContent='Errore: '+(err.message||'riprova'); errEl.classList.add('show'); }
+  finally { btn.disabled=false; btn.textContent='Salva'; }
+}
  
+async function delCert(id,nome) {
+  if(!confirm(`Eliminare la certificazione "${nome}"?`)) return;
+  const {error}=await SB.from('certificazioni').delete().eq('id',id);
+  if(error){toast('Errore eliminazione','err');return;}
+  toast('Eliminata'); await load();
+}
+ 
+// ── MODAL TECNICO ─────────────────────────────────────────
+function fillRuoliSelect() {
+  const sel=document.getElementById('t-ruolo');
+  (ROLES||[]).forEach(r=>sel.add(new Option(r,r)));
+}
+ 
+function openTecModal(tecId) {
+  document.getElementById('tec-err').classList.remove('show');
+  if (tecId) {
+    const t=TECNICI.find(x=>x.id===tecId);
+    document.getElementById('tec-modal-title').textContent='Modifica tecnico';
+    document.getElementById('tec-edit-id').value=tecId;
+    document.getElementById('t-nome').value=t.nome||'';
+    document.getElementById('t-cogn').value=t.cognome||'';
+    document.getElementById('t-email').value=t.email||'';
+    document.getElementById('t-ruolo').value=t.ruolo||'';
+    document.getElementById('t-admin').value=t.is_admin?'true':'false';
+    // In modifica nascondi il campo password
+    document.getElementById('t-pwd-wrap').style.display='none';
+    document.getElementById('t-pwd').required=false;
+  } else {
+    document.getElementById('tec-modal-title').textContent='Aggiungi tecnico';
+    document.getElementById('tec-edit-id').value='';
+    document.getElementById('t-nome').value='';
+    document.getElementById('t-cogn').value='';
+    document.getElementById('t-email').value='';
+    document.getElementById('t-pwd').value='';
+    document.getElementById('t-ruolo').value='';
+    document.getElementById('t-admin').value='false';
+    document.getElementById('t-pwd-wrap').style.display='block';
+    document.getElementById('t-pwd').required=true;
+  }
+  document.getElementById('modal-tec').classList.add('open');
+}
+function closeTecModal() { document.getElementById('modal-tec').classList.remove('open'); }
+ 
+async function salvaTec() {
+  const editId=document.getElementById('tec-edit-id').value;
+  const nome=document.getElementById('t-nome').value.trim();
+  const cogn=document.getElementById('t-cogn').value.trim();
+  const email=document.getElementById('t-email').value.trim();
+  const pwd=document.getElementById('t-pwd').value;
+  const ruolo=document.getElementById('t-ruolo').value;
+  const isAdmin=document.getElementById('t-admin').value==='true';
+  const errEl=document.getElementById('tec-err');
   errEl.classList.remove('show');
  
-  if (!techId || !brand || !corso || !cons) {
-    errEl.textContent = 'Compila i campi obbligatori (*)';
-    errEl.classList.add('show'); return;
-  }
+  if (!nome||!cogn||!email||!ruolo) { errEl.textContent='Compila tutti i campi obbligatori'; errEl.classList.add('show'); return; }
+  if (!editId && pwd.length<8) { errEl.textContent='La password deve avere almeno 8 caratteri'; errEl.classList.add('show'); return; }
  
-  btn.disabled = true; btn.textContent = 'Salvataggio...';
+  const btn=document.getElementById('tec-save-btn');
+  btn.disabled=true; btn.textContent='Salvataggio…';
  
   try {
-    const { error } = await SB.from('certificazioni').insert({
-      tech_id: techId, brand, corso,
-      data_conseguimento: cons,
-      data_scadenza: scad || null,
-      note: note || null,
-      stato: 'attiva'
-    });
-    if (error) throw error;
-    closeModal();
-    toast('Certificazione aggiunta!');
-    await load();
-  } catch(e) {
-    errEl.textContent = 'Errore: ' + e.message;
+    if (editId) {
+      // Modifica: aggiorna solo la tabella tecnici (non tocca Auth)
+      const {error}=await SB.from('tecnici').update({nome,cognome:cogn,email,ruolo,is_admin:isAdmin}).eq('id',editId);
+      if(error) throw error;
+      toast('Tecnico aggiornato!');
+    } else {
+      // Nuovo: crea account Auth + inserisce in tecnici
+      // Usa signUp per creare l'utente — poi aggiorna la tabella tecnici
+      const {data:authData, error:authErr}=await SB.auth.signUp({email, password:pwd});
+      if(authErr) throw authErr;
+      const uid=authData.user?.id;
+      if (!uid) throw new Error('Creazione account fallita');
+      // Inserisce/aggiorna in tecnici (potrebbe già esserci per il trigger)
+      const {error:dbErr}=await SB.from('tecnici').upsert({id:uid,nome,cognome:cogn,email,ruolo,is_admin:isAdmin},{onConflict:'id'});
+      if(dbErr) throw dbErr;
+      toast('Tecnico creato! Ha ricevuto una email di conferma.');
+    }
+    closeTecModal(); await load();
+  } catch(err) {
+    console.error(err);
+    errEl.textContent='Errore: '+(err.message||'riprova');
     errEl.classList.add('show');
-  } finally {
-    btn.disabled = false; btn.textContent = 'Salva certificazione';
-  }
+  } finally { btn.disabled=false; btn.textContent='Salva'; }
 }
  
-// ============================================================
-// TOAST
-// ============================================================
-function toast(msg) {
-  const el = document.getElementById('toast');
-  document.getElementById('toast-msg').textContent = msg;
-  el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 3000);
+async function delTec(id,nome) {
+  if(!confirm(`Eliminare il tecnico "${nome}"?\nSaranno eliminate anche tutte le sue certificazioni.`)) return;
+  // Elimina certificazioni del tecnico poi il tecnico
+  await SB.from('certificazioni').delete().eq('tech_id',id);
+  const {error}=await SB.from('tecnici').delete().eq('id',id);
+  if(error){toast('Errore eliminazione','err');return;}
+  toast('Tecnico eliminato'); await load();
 }
  
-// ============================================================
-// LIGHTBOX
-// ============================================================
-let lightboxUrl = '';
- 
-function apriLightbox(url, titolo) {
-  url = decodeURIComponent(url);
-  lightboxUrl = url;
-  document.getElementById('lightbox-title').textContent = decodeURIComponent(titolo || 'Documento');
-  const content = document.getElementById('lightbox-content');
-  const isPdf = url.toLowerCase().includes('.pdf') || url.toLowerCase().includes('%2Fpdf') || url.includes('pdf');
-  if (isPdf) {
-    content.innerHTML = `<iframe class="lightbox-pdf" src="${url}" title="PDF"></iframe>`;
-  } else {
-    content.innerHTML = `<img class="lightbox-img" src="${url}" alt="Documento">`;
-  }
-  document.getElementById('lightbox').classList.add('open');
-  document.body.style.overflow = 'hidden';
+// ── LIGHTBOX ──────────────────────────────────────────────
+function openLB(urlEnc,titEnc) {
+  const url=decodeURIComponent(urlEnc), tit=decodeURIComponent(titEnc||'Documento');
+  lbUrl=url;
+  document.getElementById('lb-title').textContent=tit;
+  const body=document.getElementById('lb-body');
+  body.innerHTML=/\.pdf($|\?)/i.test(url)?`<iframe class="lb-pdf" src="${url}"></iframe>`:`<img class="lb-img" src="${url}" alt="doc">`;
+  document.getElementById('lb').classList.add('open');
+  document.body.style.overflow='hidden';
 }
+function closeLB() { document.getElementById('lb').classList.remove('open'); document.getElementById('lb-body').innerHTML=''; document.body.style.overflow=''; lbUrl=''; }
+function dlDoc() { if(!lbUrl)return; const a=document.createElement('a'); a.href=lbUrl; a.download=lbUrl.split('/').pop().split('?')[0]; a.target='_blank'; a.click(); }
+function extDoc() { if(lbUrl) window.open(lbUrl,'_blank'); }
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeLB(); });
  
-function chiudiLightbox() {
-  document.getElementById('lightbox').classList.remove('open');
-  document.getElementById('lightbox-content').innerHTML = '';
-  document.body.style.overflow = '';
-  lightboxUrl = '';
+// ── TOAST ─────────────────────────────────────────────────
+function toast(msg,tipo='ok') {
+  const el=document.getElementById('toast');
+  el.className=`toast ${tipo} show`;
+  document.getElementById('toast-msg').textContent=msg;
+  clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove('show'),3500);
 }
- 
-function scaricaDoc() {
-  if (!lightboxUrl) return;
-  const a = document.createElement('a');
-  a.href = lightboxUrl;
-  a.download = lightboxUrl.split('/').pop().split('?')[0];
-  a.target = '_blank';
-  a.click();
-}
- 
-function apriEsterno() { if (lightboxUrl) window.open(lightboxUrl, '_blank'); }
- 
-document.addEventListener('keydown', e => { if (e.key === 'Escape') chiudiLightbox(); });
 </script>
 </body>
 </html>
