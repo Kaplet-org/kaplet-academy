@@ -106,6 +106,22 @@ tr:hover td{background:var(--card2);}
 .scad-tabs{display:flex;gap:0;margin-bottom:1.5rem;border-bottom:1px solid var(--border);}
 .scad-tab{padding:.5rem 1.25rem;font-size:.65rem;font-weight:400;letter-spacing:.08em;text-transform:uppercase;color:var(--gray);cursor:pointer;border:none;background:transparent;border-bottom:2px solid transparent;transition:all .2s;font-family:var(--font);}
 .scad-tab.active{color:var(--green);border-bottom-color:var(--green);}
+/* LIGHTBOX */
+.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:500;align-items:center;justify-content:center;flex-direction:column;}
+.lightbox.open{display:flex;}
+.lightbox-header{position:absolute;top:0;left:0;right:0;padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(to bottom,rgba(0,0,0,.8),transparent);}
+.lightbox-title{font-size:.75rem;font-weight:300;color:var(--white);letter-spacing:.05em;}
+.lightbox-actions{display:flex;gap:.75rem;align-items:center;}
+.lightbox-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border:1px solid rgba(255,255,255,.2);background:transparent;color:var(--white);font-family:var(--font);font-size:.68rem;font-weight:400;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:all .2s;border-radius:0;}
+.lightbox-btn:hover{border-color:var(--green);color:var(--green);}
+.lightbox-close{background:none;border:none;color:var(--gray);cursor:pointer;font-size:1.4rem;padding:0;transition:color .2s;}
+.lightbox-close:hover{color:var(--white);}
+.lightbox-content{max-width:90vw;max-height:85vh;display:flex;align-items:center;justify-content:center;}
+.lightbox-img{max-width:90vw;max-height:82vh;object-fit:contain;border:1px solid rgba(255,255,255,.1);}
+.lightbox-pdf{width:min(860px,90vw);height:82vh;border:none;}
+/* btn documento inline */
+.btn-doc{display:inline-flex;align-items:center;gap:4px;font-size:.6rem;font-weight:400;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border:1px solid var(--green-border);background:var(--green-dim);color:var(--green);cursor:pointer;border-radius:0;font-family:var(--font);transition:all .2s;white-space:nowrap;}
+.btn-doc:hover{background:var(--green);color:var(--black);}
 @media(max-width:900px){nav{padding:0 1.5rem;}.hero,.main{padding-left:1.5rem;padding-right:1.5rem;}.stats-row{flex-wrap:wrap;}}
 </style>
 </head>
@@ -205,6 +221,25 @@ tr:hover td{background:var(--card2);}
     <button class="btn-primary" id="btn-salva" onclick="salvaCert()">Salva certificazione</button>
     <div class="msg-error" id="m-err"></div>
   </div>
+</div>
+ 
+<!-- LIGHTBOX preview documento -->
+<div class="lightbox" id="lightbox">
+  <div class="lightbox-header">
+    <div class="lightbox-title" id="lightbox-title">Documento</div>
+    <div class="lightbox-actions">
+      <button class="lightbox-btn" onclick="scaricaDoc()">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Scarica
+      </button>
+      <button class="lightbox-btn" onclick="apriEsterno()">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Apri
+      </button>
+      <button class="lightbox-close" onclick="chiudiLightbox()">✕</button>
+    </div>
+  </div>
+  <div class="lightbox-content" id="lightbox-content"></div>
 </div>
  
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -321,6 +356,7 @@ const bc  = b => BC[b] || '#36CD81';
 // Restituisce giorni interi rimanenti (negativo = già scaduta)
 const gg  = d => d ? Math.ceil((new Date(d) - new Date()) / 86400000) : null;
 const fmt = d => d ? new Date(d).toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric'}) : '—';
+const escUrl = s => encodeURIComponent(s || '');
  
 // ============================================================
 // RENDER TEAM
@@ -328,7 +364,7 @@ const fmt = d => d ? new Date(d).toLocaleDateString('it-IT',{day:'2-digit',month
 function renderTeam() {
   const oggi = new Date();
   document.getElementById('team-body').innerHTML = TECNICI.length === 0
-    ? '<tr><td colspan="4" style="text-align:center;padding:2rem;color:var(--gray)">Nessun tecnico</td></tr>'
+    ? '<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--gray)">Nessun tecnico</td></tr>'
     : TECNICI.map(t => {
         const certs = CERTS.filter(c => c.tech_id === t.id);
         const att   = certs.filter(c => c.stato === 'attiva' && (!c.data_scadenza || new Date(c.data_scadenza) >= oggi));
@@ -336,10 +372,15 @@ function renderTeam() {
           const g   = gg(c.data_scadenza);
           const isS = c.data_scadenza && new Date(c.data_scadenza) < oggi;
           const cls = isS ? 'p-scad' : (g !== null && g <= 60 ? 'p-warn' : 'p-ok');
-          return `<span class="pill ${cls}" style="border-color:${bc(c.brand)}44" title="${c.corso}">${c.brand}</span>`;
+          // se ha documento mostra pin
+          const docPin = c.documento_url
+            ? `<button class="btn-doc" onclick="apriLightbox('${escUrl(c.documento_url)}','${escUrl(c.brand+' — '+c.corso)}')" title="Vedi documento">📄</button>`
+            : '';
+          return `<span style="display:inline-flex;align-items:center;gap:3px;margin:2px">
+            <span class="pill ${cls}" style="border-color:${bc(c.brand)}44" title="${c.corso}">${c.brand}</span>${docPin}
+          </span>`;
         }).join('');
         const pct = Math.min(100, att.length * 10);
-        // FIX: usa initiali() invece di t.avatar
         return `<tr>
           <td><div class="tec-info"><div class="av">${initiali(t)}</div><div><div class="tec-nome">${t.nome} ${t.cognome}</div><div class="tec-email">${t.email}</div></div></div></td>
           <td style="color:var(--gray);font-size:.75rem">${t.ruolo || '—'}</td>
@@ -391,6 +432,7 @@ function renderScad() {
           <span class="scad-urg ${cls}">${lbl}</span>
           <div class="scad-info"><div class="scad-nome">${t ? t.nome+' '+t.cognome : '—'}</div><div class="scad-corso">${c.brand} — ${c.corso}</div></div>
           <div class="scad-data">${fmt(c.data_scadenza)}</div>
+          ${c.documento_url ? `<button class="btn-doc" onclick="apriLightbox('${escUrl(c.documento_url)}','${escUrl((t?t.nome+' '+t.cognome:'')+ ' — '+c.brand+' — '+c.corso)}')">📄 Documento</button>` : ''}
         </div>`;
       }).join('');
 }
@@ -528,6 +570,46 @@ function toast(msg) {
   el.classList.add('show');
   setTimeout(() => el.classList.remove('show'), 3000);
 }
+ 
+// ============================================================
+// LIGHTBOX
+// ============================================================
+let lightboxUrl = '';
+ 
+function apriLightbox(url, titolo) {
+  url = decodeURIComponent(url);
+  lightboxUrl = url;
+  document.getElementById('lightbox-title').textContent = decodeURIComponent(titolo || 'Documento');
+  const content = document.getElementById('lightbox-content');
+  const isPdf = url.toLowerCase().includes('.pdf') || url.toLowerCase().includes('%2Fpdf') || url.includes('pdf');
+  if (isPdf) {
+    content.innerHTML = `<iframe class="lightbox-pdf" src="${url}" title="PDF"></iframe>`;
+  } else {
+    content.innerHTML = `<img class="lightbox-img" src="${url}" alt="Documento">`;
+  }
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+ 
+function chiudiLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.getElementById('lightbox-content').innerHTML = '';
+  document.body.style.overflow = '';
+  lightboxUrl = '';
+}
+ 
+function scaricaDoc() {
+  if (!lightboxUrl) return;
+  const a = document.createElement('a');
+  a.href = lightboxUrl;
+  a.download = lightboxUrl.split('/').pop().split('?')[0];
+  a.target = '_blank';
+  a.click();
+}
+ 
+function apriEsterno() { if (lightboxUrl) window.open(lightboxUrl, '_blank'); }
+ 
+document.addEventListener('keydown', e => { if (e.key === 'Escape') chiudiLightbox(); });
 </script>
 </body>
 </html>
