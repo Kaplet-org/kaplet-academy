@@ -476,7 +476,7 @@ function fillCorsi() {
   const courses = (typeof COURSES !== 'undefined' && Array.isArray(COURSES)) ? COURSES : [];
   const corsi   = courses.filter(c => c.brand === b);
   sel.innerHTML = corsi.length
-    ? '<option value="">Seleziona corso...</option>' + corsi.map(c => `<option value="${c.nome}">${c.nome}</option>`).join('')
+    ? '<option value="">Seleziona corso...</option>' + corsi.map(c => `<option value="${c.name}">${c.name}</option>`).join('')
     : '<option value="">Nessun corso disponibile</option>';
 }
  
