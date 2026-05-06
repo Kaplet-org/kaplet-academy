@@ -98,7 +98,34 @@ tr:hover td{background:var(--card2);}
 .mb-none{color:rgba(255,255,255,.15);border-color:var(--border);}
 .mc-inner{display:flex;flex-direction:column;align-items:center;gap:3px;}
 .mc-corso{font-size:.52rem;color:var(--gray);max-width:75px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-/* DOC BTN */
+/* MAPPA — card stile catalogo */
+.mx-filters{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.5rem;align-items:center;}
+.mx-filter-btn{font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;padding:5px 12px;border:1px solid var(--border);background:transparent;color:var(--gray);cursor:pointer;font-family:var(--font);transition:all .2s;}
+.mx-filter-btn:hover{border-color:var(--green);color:var(--green);}
+.mx-filter-btn.active{border-color:var(--green);color:var(--green);background:var(--gdim);}
+.mx-count{font-size:.72rem;color:var(--gray);margin-left:auto;}
+.cert-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1px;background:var(--border);}
+.cert-card{background:var(--card);padding:1.5rem;border-left:3px solid transparent;transition:all .2s;cursor:default;position:relative;}
+.cert-card:hover{background:var(--card2);}
+.cert-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem;margin-bottom:.85rem;}
+.cert-brand-pill{font-size:.58rem;font-weight:400;letter-spacing:.12em;text-transform:uppercase;padding:3px 9px;border:1px solid;}
+.cert-stato-pill{font-size:.56rem;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border:1px solid;flex-shrink:0;}
+.cs-ok{color:var(--green);border-color:var(--gborder);background:var(--gdim);}
+.cs-wa{color:var(--warn);border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.05);}
+.cs-no{color:var(--danger);border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.05);}
+.cert-corso{font-size:.95rem;font-weight:300;line-height:1.35;margin-bottom:.35rem;color:var(--white);}
+.cert-cat{font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gray);margin-bottom:.6rem;}
+.cert-tec{display:flex;align-items:center;gap:.5rem;margin-bottom:.6rem;}
+.cert-tec-av{width:22px;height:22px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:.5rem;font-weight:600;color:var(--black);flex-shrink:0;}
+.cert-tec-nm{font-size:.72rem;font-weight:300;color:var(--gray);}
+.cert-meta{display:flex;flex-direction:column;gap:3px;font-size:.7rem;font-weight:300;color:var(--gray);}
+.cert-foot{display:flex;align-items:center;justify-content:space-between;margin-top:.85rem;padding-top:.85rem;border-top:1px solid var(--border);gap:.5rem;flex-wrap:wrap;}
+.cert-date{font-size:.68rem;color:var(--gray);}
+.cert-sbar{margin-top:.75rem;}
+.cert-sbar-bg{height:2px;background:rgba(255,255,255,.07);border-radius:2px;margin-bottom:3px;}
+.cert-sbar-fill{height:2px;border-radius:2px;}
+.cert-sbar-lbl{font-size:.6rem;color:var(--gray);}
+.cert-sbar-lbl.w{color:var(--warn);}.cert-sbar-lbl.d{color:var(--danger);}
 .btn-doc{display:inline-flex;align-items:center;gap:3px;font-size:.58rem;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border:1px solid var(--gborder);background:var(--gdim);color:var(--green);cursor:pointer;font-family:var(--font);transition:all .2s;white-space:nowrap;}
 .btn-doc:hover{background:var(--green);color:var(--black);}
 /* BADGE RUOLO */
@@ -246,9 +273,15 @@ tr:hover td{background:var(--card2);}
  
   <!-- TAB: MAPPA -->
   <div class="sec" id="sec-mx">
-    <div class="sec-hd"><div class="sec-title">Mappa certificazioni per brand</div></div>
-    <p style="font-size:.75rem;color:var(--gray);margin-bottom:1.25rem;font-weight:300">Verde = attiva · Giallo = in scadenza 60gg · Rosso = scaduta · Grigio = assente. Il nome del corso appare sotto il badge.</p>
-    <div class="mx-wrap"><div id="mx-body"></div></div>
+    <div class="sec-hd"><div class="sec-title">Certificazioni del team</div></div>
+    <div class="mx-filters">
+      <button class="mx-filter-btn active" onclick="mxFilter('',this)">Tutti</button>
+      <button class="mx-filter-btn" onclick="mxFilter('attiva',this)">Attive</button>
+      <button class="mx-filter-btn" onclick="mxFilter('scadenza',this)">In scadenza</button>
+      <button class="mx-filter-btn" onclick="mxFilter('scaduta',this)">Scadute</button>
+      <span class="mx-count" id="mx-count"></span>
+    </div>
+    <div class="cert-cards" id="mx-body"></div>
   </div>
  
   <!-- TAB: TECNICI -->
@@ -548,34 +581,100 @@ function renderScad() {
       }).join('');
 }
  
-// ── RENDER MAPPA ──────────────────────────────────────────
+// ── RENDER MAPPA (card stile catalogo) ───────────────────
+let mxFilterAttivo = '';
+ 
+function mxFilter(tipo, btn) {
+  mxFilterAttivo = tipo;
+  document.querySelectorAll('.mx-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderMx();
+}
+ 
 function renderMx() {
-  const oggi=new Date(), brands=[...new Set(CERTS.map(c=>c.brand))].sort();
-  const el=document.getElementById('mx-body');
-  if (!brands.length||!TECNICI.length) { el.innerHTML='<div class="empty"><div class="empty-ic">◌</div><div class="empty-t">Nessuna certificazione</div></div>'; return; }
-  let h=`<div class="mx-hd"><div class="mhc mhb">Brand</div>${TECNICI.map(t=>`<div class="mhc" title="${t.nome} ${t.cognome}">${ini(t)}<br><span style="font-size:.5rem;font-weight:300">${(t.nome||'').split(' ')[0]}</span></div>`).join('')}</div>`;
-  brands.forEach(b=>{
-    h+=`<div class="mx-row"><div class="mbrand"><div class="mdot" style="background:${bc(b)}"></div><div class="mname">${b}</div></div>`;
-    TECNICI.forEach(t=>{
-      const c=CERTS.find(x=>x.tech_id===t.id&&x.brand===b);
-      if (!c) { h+=`<div class="mcell"><span class="mb mb-none">—</span></div>`; return; }
-      const g=gg(c.data_scadenza), isS=c.data_scadenza&&new Date(c.data_scadenza)<oggi;
-      const cls=isS?'mb-no':(g!==null&&g<=60?'mb-wa':'mb-ok');
-      const lbl=isS?'✕':(g!==null&&g<=60?`${g}gg`:'✓');
-      // Nome corso troncato + doc btn
-      const corsoShort=(c.corso||'').length>18?c.corso.substring(0,16)+'…':c.corso;
-      const doc=c.documento_url?`<button class="btn-doc" style="font-size:.5rem;padding:1px 5px;margin-top:3px" onclick="openLB('${enc(c.documento_url)}','${enc(c.brand+' — '+c.corso)}')">📄</button>`:'';
-      h+=`<div class="mcell" title="${c.corso} · ${fmt(c.data_scadenza)}">
-        <div class="mc-inner">
-          <span class="mb ${cls}">${lbl}</span>
-          <span class="mc-corso" title="${c.corso}">${corsoShort}</span>
-          ${doc}
-        </div>
-      </div>`;
-    });
-    h+='</div>';
+  const oggi = new Date();
+  const el = document.getElementById('mx-body');
+ 
+  if (!CERTS.length) {
+    el.innerHTML = '<div class="empty" style="grid-column:1/-1"><div class="empty-ic">◌</div><div class="empty-t">Nessuna certificazione nel team</div></div>';
+    document.getElementById('mx-count').textContent = '';
+    return;
+  }
+ 
+  // Filtra
+  let lista = [...CERTS];
+  if (mxFilterAttivo === 'attiva') {
+    lista = lista.filter(c => c.stato === 'attiva' && (!c.data_scadenza || new Date(c.data_scadenza) >= oggi) && !(gg(c.data_scadenza) !== null && gg(c.data_scadenza) <= 60));
+  } else if (mxFilterAttivo === 'scadenza') {
+    lista = lista.filter(c => { const g = gg(c.data_scadenza); return g !== null && g >= 0 && g <= 60; });
+  } else if (mxFilterAttivo === 'scaduta') {
+    lista = lista.filter(c => c.stato === 'scaduta' || (c.data_scadenza && new Date(c.data_scadenza) < oggi));
+  }
+ 
+  // Ordina: scadute prima, poi per brand
+  lista.sort((a, b) => {
+    const ga = gg(a.data_scadenza), gb = gg(b.data_scadenza);
+    if (ga !== null && gb !== null) return ga - gb;
+    return (a.brand || '').localeCompare(b.brand || '');
   });
-  el.innerHTML=h;
+ 
+  document.getElementById('mx-count').textContent = `${lista.length} certificazioni`;
+ 
+  el.innerHTML = lista.map(c => {
+    const t = TECNICI.find(x => x.id === c.tech_id);
+    const col = bc(c.brand);
+    const g = gg(c.data_scadenza);
+    const isS = c.data_scadenza && new Date(c.data_scadenza) < oggi;
+ 
+    let statoCls = 'cs-ok', statoLbl = 'Attiva';
+    if (isS) { statoCls = 'cs-no'; statoLbl = 'Scaduta'; }
+    else if (g !== null && g <= 30) { statoCls = 'cs-wa'; statoLbl = `Scade in ${g}gg`; }
+    else if (g !== null && g <= 60) { statoCls = 'cs-wa'; statoLbl = 'In scadenza'; }
+ 
+    // Barra scadenza
+    let sbar = '';
+    if (c.data_scadenza) {
+      const tot = Math.max(1, Math.ceil((new Date(c.data_scadenza) - new Date(c.data_conseguimento)) / 864e5));
+      const rim = Math.max(0, g || 0);
+      const pct = Math.min(100, (rim / tot) * 100);
+      const fCol = isS ? 'var(--danger)' : (g <= 30 ? 'var(--danger)' : g <= 60 ? 'var(--warn)' : 'var(--green)');
+      const lCls = isS ? 'd' : (g <= 60 ? 'w' : '');
+      sbar = `<div class="cert-sbar">
+        <div class="cert-sbar-bg"><div class="cert-sbar-fill" style="width:${pct}%;background:${fCol}"></div></div>
+        <div class="cert-sbar-lbl ${lCls}">${isS ? 'Scaduta il' : 'Scade il'} ${fmt(c.data_scadenza)}${!isS && g !== null ? ` · ${g}gg` : ''}</div>
+      </div>`;
+    }
+ 
+    // Bottone documento
+    const doc = c.documento_url
+      ? `<button class="btn-doc" onclick="openLB('${enc(c.documento_url)}','${enc(c.brand + ' — ' + c.corso)}')">📄 Documento</button>`
+      : '';
+ 
+    return `<div class="cert-card" style="border-left-color:${col}">
+      <div class="cert-card-top">
+        <span class="cert-brand-pill" style="color:${col};border-color:${col}44;background:${col}12">${c.brand}</span>
+        <span class="cert-stato-pill ${statoCls}">${statoLbl}</span>
+      </div>
+      ${c.cat ? `<div class="cert-cat">${c.cat}</div>` : ''}
+      <div class="cert-corso">${c.corso}</div>
+      <div class="cert-tec">
+        <div class="cert-tec-av">${t ? ini(t) : '?'}</div>
+        <div class="cert-tec-nm">${t ? t.nome + ' ' + t.cognome : '—'}</div>
+      </div>
+      <div class="cert-meta">
+        <span>📅 Conseguita: ${fmt(c.data_conseguimento)}</span>
+        ${c.note ? `<span style="color:rgba(255,255,255,.3);font-size:.65rem">${c.note}</span>` : ''}
+      </div>
+      ${sbar}
+      <div class="cert-foot">
+        ${doc}
+        <div class="act-btns" style="margin-left:auto">
+          <button class="btn-xs btn-xs-g" onclick="openCertModal('${c.id}')">✏ Modifica</button>
+          <button class="btn-xs btn-xs-e" onclick="delCert('${c.id}','${(c.corso || '').replace(/'/g, "\\'")}')">✕</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
 }
  
 // ── RENDER TECNICI ────────────────────────────────────────
