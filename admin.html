@@ -17,7 +17,7 @@ nav{position:sticky;top:0;z-index:100;background:var(--black);border-bottom:1px 
 .nav-tab:hover{color:var(--white);}
 .nav-tab.active{color:var(--green);border-bottom-color:var(--green);}
 .nav-right{display:flex;align-items:center;gap:1rem;}
-.btn-nav{padding:8px 18px;border:1px solid var(--border);background:transparent;color:var(--gray);font-family:var(--font);font-size:.72rem;font-weight:400;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .2s;border-radius:0;}
+.btn-nav{padding:8px 18px;border:1px solid var(--border);background:transparent;color:var(--gray);font-family:var(--font);font-size:.72rem;font-weight:400;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .2s;border-radius:0;text-decoration:none;display:inline-flex;align-items:center;}
 .btn-nav:hover{border-color:var(--green);color:var(--green);}
 .hero{padding:4rem 3rem 2.5rem;border-bottom:1px solid var(--border);}
 .hero-inner{max-width:1300px;margin:0 auto;}
@@ -77,6 +77,7 @@ tr:hover td{background:var(--card2);}
 .mb-ok{color:var(--green);border-color:var(--green-border);background:var(--green-dim);}
 .mb-none{color:rgba(255,255,255,.2);border-color:var(--border);}
 .mb-warn{color:var(--warn);border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.05);}
+.mb-scad{color:rgba(239,68,68,.7);border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.05);}
 .empty{text-align:center;padding:4rem 2rem;color:var(--gray);}
 .empty-icon{font-size:2rem;opacity:.3;margin-bottom:.75rem;}
 .empty-title{font-size:1rem;font-weight:200;color:var(--white);}
@@ -101,11 +102,14 @@ tr:hover td{background:var(--card2);}
 .btn-primary:disabled{opacity:.4;cursor:not-allowed;}
 .msg-error{display:none;margin-top:.75rem;padding:.75rem 1rem;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:#f87171;font-size:.78rem;}
 .msg-error.show{display:block;}
+/* SEZIONE SCADENZE - tabs interni */
+.scad-tabs{display:flex;gap:0;margin-bottom:1.5rem;border-bottom:1px solid var(--border);}
+.scad-tab{padding:.5rem 1.25rem;font-size:.65rem;font-weight:400;letter-spacing:.08em;text-transform:uppercase;color:var(--gray);cursor:pointer;border:none;background:transparent;border-bottom:2px solid transparent;transition:all .2s;font-family:var(--font);}
+.scad-tab.active{color:var(--green);border-bottom-color:var(--green);}
 @media(max-width:900px){nav{padding:0 1.5rem;}.hero,.main{padding-left:1.5rem;padding-right:1.5rem;}.stats-row{flex-wrap:wrap;}}
 </style>
 </head>
 <body>
-
 <nav>
   <a class="nav-logo" href="index.html"><span>·</span>KAPLET Academy</a>
   <div class="nav-links">
@@ -118,7 +122,7 @@ tr:hover td{background:var(--card2);}
     <button class="btn-nav" id="btn-esci" onclick="doLogout()">Esci</button>
   </div>
 </nav>
-
+ 
 <div class="hero">
   <div class="hero-inner">
     <div class="hero-label">Pannello amministratore</div>
@@ -132,7 +136,7 @@ tr:hover td{background:var(--card2);}
     </div>
   </div>
 </div>
-
+ 
 <div class="main">
   <div class="section active" id="section-team">
     <div class="section-header">
@@ -146,19 +150,25 @@ tr:hover td{background:var(--card2);}
       </table>
     </div>
   </div>
+ 
   <div class="section" id="section-scadenze">
-    <div class="section-header"><div class="section-title">Certificazioni in scadenza (60gg)</div></div>
+    <div class="section-header"><div class="section-title">Scadenze certificazioni</div></div>
+    <div class="scad-tabs">
+      <button class="scad-tab active" id="tab-prox" onclick="switchScadTab('prox',this)">In scadenza (60gg)</button>
+      <button class="scad-tab" id="tab-sca" onclick="switchScadTab('sca',this)">Già scadute</button>
+    </div>
     <div class="scad-list" id="scad-body"></div>
   </div>
+ 
   <div class="section" id="section-matrix">
     <div class="section-header"><div class="section-title">Mappa certificazioni per brand</div></div>
-    <p style="font-size:.78rem;color:var(--gray);margin-bottom:1.5rem;font-weight:300">Verde = attiva · Giallo = in scadenza 60gg · Grigio = assente</p>
+    <p style="font-size:.78rem;color:var(--gray);margin-bottom:1.5rem;font-weight:300">Verde = attiva · Giallo = in scadenza 60gg · Rosso = scaduta · Grigio = assente</p>
     <div id="matrix-body" style="overflow-x:auto"></div>
   </div>
 </div>
-
+ 
 <div class="toast" id="toast"><div class="toast-dot"></div><span id="toast-msg"></span></div>
-
+ 
 <!-- MODAL -->
 <div class="modal-overlay" id="modal">
   <div class="modal-box">
@@ -196,10 +206,18 @@ tr:hover td{background:var(--card2);}
     <div class="msg-error" id="m-err"></div>
   </div>
 </div>
-
+ 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/courses.js"></script>
 <script>
+// ============================================================
+// FALLBACK: se courses.js non è caricato correttamente
+// ============================================================
+if (typeof COURSES === 'undefined') {
+  console.warn('courses.js non caricato, COURSES impostato a []');
+  window.COURSES = [];
+}
+ 
 // ============================================================
 // CONFIG
 // ============================================================
@@ -207,9 +225,19 @@ const SB = supabase.createClient(
   'https://mcgerrvorboagkukzuzc.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1jZ2VycnZvcmJvYWdrdWt6dXpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4NjEyNzIsImV4cCI6MjA5MzQzNzI3Mn0.eDHZ-QUQLM2tFU4KPDEiIqXZsdfk_Cxnz7Ywxt6T46o'
 );
-
+ 
 let TECNICI = [], CERTS = [];
-
+let scadTabAttivo = 'prox'; // tab attivo nella sezione scadenze
+ 
+// ============================================================
+// UTILS — calcola iniziali da nome e cognome
+// ============================================================
+function initiali(t) {
+  const n = (t.nome || '').trim()[0] || '';
+  const c = (t.cognome || '').trim()[0] || '';
+  return (n + c).toUpperCase();
+}
+ 
 // ============================================================
 // INIT — getSession diretto, niente onAuthStateChange
 // ============================================================
@@ -217,36 +245,36 @@ let TECNICI = [], CERTS = [];
   try {
     const { data: { session } } = await SB.auth.getSession();
     if (!session) { window.location.replace('login.html'); return; }
-
+ 
     const { data: me, error } = await SB
       .from('tecnici').select('is_admin').eq('id', session.user.id).single();
-
-    if (error || !me || !me.is_admin) {
+ 
+    // FIX: is_admin deve essere esplicitamente true (non null, non false)
+    if (error || !me || me.is_admin !== true) {
       window.location.replace('tecnico.html'); return;
     }
-
+ 
     await load();
   } catch(e) {
     console.error(e);
     window.location.replace('login.html');
   }
 })();
-
+ 
 // ============================================================
-// LOGOUT — pulisce tutto e forza redirect
+// LOGOUT
 // ============================================================
 async function doLogout() {
   const btn = document.getElementById('btn-esci');
   btn.textContent = '...';
   btn.disabled = true;
   try { await SB.auth.signOut(); } catch(e) {}
-  // Pulisci localStorage Supabase
   for (const k of Object.keys(localStorage)) {
     if (k.startsWith('sb-') || k.includes('supabase')) localStorage.removeItem(k);
   }
   window.location.replace('login.html');
 }
-
+ 
 // ============================================================
 // CARICA DATI
 // ============================================================
@@ -255,30 +283,45 @@ async function load() {
     SB.from('tecnici').select('*').order('cognome'),
     SB.from('certificazioni').select('*').order('inserita_il', { ascending: false })
   ]);
+ 
   TECNICI = r1.data || [];
   CERTS   = r2.data || [];
-
+ 
   const oggi = new Date();
   const att  = CERTS.filter(c => c.stato === 'attiva' && (!c.data_scadenza || new Date(c.data_scadenza) >= oggi));
   const sca  = CERTS.filter(c => c.stato === 'scaduta' || (c.data_scadenza && new Date(c.data_scadenza) < oggi));
-  const s60  = att.filter(c => c.data_scadenza && gg(c.data_scadenza) <= 60);
-
+  // "In scadenza 60gg" = attive CON scadenza entro 60 giorni (positivi ≤ 60)
+  const s60  = att.filter(c => c.data_scadenza && gg(c.data_scadenza) >= 0 && gg(c.data_scadenza) <= 60);
+ 
   document.getElementById('s-tec').textContent = TECNICI.length;
   document.getElementById('s-att').textContent = att.length;
   document.getElementById('s-s60').textContent = s60.length;
   document.getElementById('s-sca').textContent = sca.length;
-
-  renderTeam(); renderScad(); renderMatrix();
+ 
+  renderTeam();
+  renderScad();
+  renderMatrix();
 }
-
+ 
 // ============================================================
 // UTILS
 // ============================================================
-const BC = {"AVIXA":"#F59E0B","DANTE":"#EF4444","NDI":"#38BDF8","AXIS":"#4ADE80","FORTINET":"#F87171","CISCO":"#22D3EE","CRESTRON":"#4ADE80","BARCO CTRL":"#FB923C","BARCO VIDEO":"#FBBF24","NOVASTAR":"#C084FC","MILESTONE":"#F472B6","ALTA ACCESS":"#38BDF8","ALTA VIDEO":"#60A5FA","AVIGILON UNITY":"#818CF8","SHURE":"#A78BFA","Q-SYS":"#F87171","YAMAHA":"#FCD34D","POWERSOFT":"#34D399","TELEVIC":"#A78BFA","EXTRON":"#F87171","K-ARRAY":"#4ADE80","K-SCAPE":"#34D399","BRIGHTSIGN":"#60A5FA","ELMO":"#FCA5A1","KSENIA":"#C084FC","NOTIFIER":"#FB923C","TECNOFIRE":"#F87171","KNX & DALI":"#818CF8","MAXHUB":"#38BDF8"};
+const BC = {
+  "AVIXA":"#F59E0B","DANTE":"#EF4444","NDI":"#38BDF8","AXIS":"#4ADE80",
+  "FORTINET":"#F87171","CISCO":"#22D3EE","CRESTRON":"#4ADE80","BARCO CTRL":"#FB923C",
+  "BARCO VIDEO":"#FBBF24","NOVASTAR":"#C084FC","MILESTONE":"#F472B6",
+  "ALTA ACCESS":"#38BDF8","ALTA VIDEO":"#60A5FA","AVIGILON UNITY":"#818CF8",
+  "SHURE":"#A78BFA","Q-SYS":"#F87171","YAMAHA":"#FCD34D","POWERSOFT":"#34D399",
+  "TELEVIC":"#A78BFA","EXTRON":"#F87171","K-ARRAY":"#4ADE80","K-SCAPE":"#34D399",
+  "BRIGHTSIGN":"#60A5FA","ELMO":"#FCA5A1","KSENIA":"#C084FC","NOTIFIER":"#FB923C",
+  "TECNOFIRE":"#F87171","KNX & DALI":"#818CF8","MAXHUB":"#38BDF8"
+};
+ 
 const bc  = b => BC[b] || '#36CD81';
+// Restituisce giorni interi rimanenti (negativo = già scaduta)
 const gg  = d => d ? Math.ceil((new Date(d) - new Date()) / 86400000) : null;
 const fmt = d => d ? new Date(d).toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric'}) : '—';
-
+ 
 // ============================================================
 // RENDER TEAM
 // ============================================================
@@ -290,37 +333,60 @@ function renderTeam() {
         const certs = CERTS.filter(c => c.tech_id === t.id);
         const att   = certs.filter(c => c.stato === 'attiva' && (!c.data_scadenza || new Date(c.data_scadenza) >= oggi));
         const pills = certs.map(c => {
-          const g = gg(c.data_scadenza);
+          const g   = gg(c.data_scadenza);
           const isS = c.data_scadenza && new Date(c.data_scadenza) < oggi;
           const cls = isS ? 'p-scad' : (g !== null && g <= 60 ? 'p-warn' : 'p-ok');
           return `<span class="pill ${cls}" style="border-color:${bc(c.brand)}44" title="${c.corso}">${c.brand}</span>`;
         }).join('');
         const pct = Math.min(100, att.length * 10);
+        // FIX: usa initiali() invece di t.avatar
         return `<tr>
-          <td><div class="tec-info"><div class="av">${t.avatar||''}</div><div><div class="tec-nome">${t.nome} ${t.cognome}</div><div class="tec-email">${t.email}</div></div></div></td>
-          <td style="color:var(--gray);font-size:.75rem">${t.ruolo}</td>
+          <td><div class="tec-info"><div class="av">${initiali(t)}</div><div><div class="tec-nome">${t.nome} ${t.cognome}</div><div class="tec-email">${t.email}</div></div></div></td>
+          <td style="color:var(--gray);font-size:.75rem">${t.ruolo || '—'}</td>
           <td><div class="pills">${pills||'<span style="font-size:.7rem;color:rgba(255,255,255,.2)">Nessuna</span>'}</div><div style="font-size:.62rem;color:var(--gray);margin-top:4px">${att.length} attive · ${certs.length} totali</div></td>
           <td><div style="min-width:100px"><div class="prog-bg"><div class="prog-fill" style="width:${pct}%"></div></div><div class="prog-label">${att.length} cert.</div></div></td>
         </tr>`;
       }).join('');
 }
-
+ 
 // ============================================================
-// RENDER SCADENZE
+// RENDER SCADENZE (con tab: "prossime" vs "già scadute")
 // ============================================================
+function switchScadTab(tab, btn) {
+  scadTabAttivo = tab;
+  document.querySelectorAll('.scad-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  renderScad();
+}
+ 
 function renderScad() {
-  const inScad = CERTS
-    .filter(c => c.data_scadenza && gg(c.data_scadenza) <= 60)
-    .sort((a,b) => new Date(a.data_scadenza) - new Date(b.data_scadenza));
-
-  document.getElementById('scad-body').innerHTML = inScad.length === 0
-    ? '<div class="empty"><div class="empty-icon">✓</div><div class="empty-title">Nessuna scadenza nei prossimi 60 giorni</div></div>'
-    : inScad.map(c => {
-        const g = gg(c.data_scadenza);
-        const t = TECNICI.find(x => x.id === c.tech_id);
+  const oggi = new Date();
+ 
+  let lista;
+  if (scadTabAttivo === 'prox') {
+    // Prossime: scadenza nei prossimi 60 giorni (0..60)
+    lista = CERTS
+      .filter(c => c.data_scadenza && gg(c.data_scadenza) >= 0 && gg(c.data_scadenza) <= 60)
+      .sort((a,b) => new Date(a.data_scadenza) - new Date(b.data_scadenza));
+  } else {
+    // Già scadute: gg < 0 oppure stato = 'scaduta'
+    lista = CERTS
+      .filter(c => c.stato === 'scaduta' || (c.data_scadenza && new Date(c.data_scadenza) < oggi))
+      .sort((a,b) => new Date(b.data_scadenza) - new Date(a.data_scadenza));
+  }
+ 
+  const emptyMsg = scadTabAttivo === 'prox'
+    ? 'Nessuna scadenza nei prossimi 60 giorni'
+    : 'Nessuna certificazione scaduta';
+ 
+  document.getElementById('scad-body').innerHTML = lista.length === 0
+    ? `<div class="empty"><div class="empty-icon">✓</div><div class="empty-title">${emptyMsg}</div></div>`
+    : lista.map(c => {
+        const g  = gg(c.data_scadenza);
+        const t  = TECNICI.find(x => x.id === c.tech_id);
         const isS = g !== null && g < 0;
         const cls = (isS || g === 0) ? 'u-danger' : g <= 7 ? 'u-danger' : g <= 30 ? 'u-warn' : 'u-ok';
-        const lbl = isS ? 'SCADUTA' : `${g}gg`;
+        const lbl = isS ? `SCADUTA ${Math.abs(g)}gg fa` : `${g}gg`;
         return `<div class="scad-item">
           <span class="scad-urg ${cls}">${lbl}</span>
           <div class="scad-info"><div class="scad-nome">${t ? t.nome+' '+t.cognome : '—'}</div><div class="scad-corso">${c.brand} — ${c.corso}</div></div>
@@ -328,33 +394,43 @@ function renderScad() {
         </div>`;
       }).join('');
 }
-
+ 
 // ============================================================
 // RENDER MATRIX
 // ============================================================
 function renderMatrix() {
+  const oggi  = new Date();
   const brands = [...new Set(CERTS.map(c => c.brand))].sort();
-  const el = document.getElementById('matrix-body');
+  const el     = document.getElementById('matrix-body');
+ 
   if (!brands.length || !TECNICI.length) {
     el.innerHTML = '<div class="empty"><div class="empty-icon">◌</div><div class="empty-title">Nessuna certificazione ancora</div></div>';
     return;
   }
-  let h = `<div class="mx-header"><div class="mh-cell mh-brand">Brand</div>${TECNICI.map(t=>`<div class="mh-cell" title="${t.nome} ${t.cognome}">${t.avatar||''}</div>`).join('')}</div>`;
+ 
+  // FIX: usa initiali() invece di t.avatar per gli header della matrice
+  let h = `<div class="mx-header"><div class="mh-cell mh-brand">Brand</div>${
+    TECNICI.map(t => `<div class="mh-cell" title="${t.nome} ${t.cognome}">${initiali(t)}</div>`).join('')
+  }</div>`;
+ 
   brands.forEach(b => {
     h += `<div class="mx-row"><div class="mx-brand"><div class="mdot" style="background:${bc(b)}"></div><div class="mname">${b}</div></div>`;
     TECNICI.forEach(t => {
       const c = CERTS.find(x => x.tech_id === t.id && x.brand === b);
       if (!c) { h += `<div class="mx-cell"><span class="mb mb-none">—</span></div>`; return; }
-      const g = gg(c.data_scadenza);
-      const cls = g !== null && g <= 60 ? 'mb-warn' : 'mb-ok';
-      const lbl = g !== null && g <= 60 ? `${g}gg` : '✓';
-      h += `<div class="mx-cell" title="${c.corso}"><span class="mb ${cls}">${lbl}</span></div>`;
+      const g    = gg(c.data_scadenza);
+      const isS  = c.data_scadenza && new Date(c.data_scadenza) < oggi;
+      // FIX: distingui scaduta (rosso) da in scadenza (giallo) da attiva (verde)
+      const cls  = isS ? 'mb-scad' : (g !== null && g <= 60 ? 'mb-warn' : 'mb-ok');
+      const lbl  = isS ? '✕' : (g !== null && g <= 60 ? `${g}gg` : '✓');
+      h += `<div class="mx-cell" title="${c.corso} — ${fmt(c.data_scadenza)}"><span class="mb ${cls}">${lbl}</span></div>`;
     });
     h += '</div>';
   });
+ 
   el.innerHTML = h;
 }
-
+ 
 // ============================================================
 // NAVIGAZIONE
 // ============================================================
@@ -364,7 +440,7 @@ function showSection(id, btn) {
   document.getElementById('section-'+id).classList.add('active');
   btn.classList.add('active');
 }
-
+ 
 // ============================================================
 // MODAL
 // ============================================================
@@ -373,11 +449,14 @@ function openModal() {
   document.getElementById('m-tec').innerHTML =
     '<option value="">Seleziona...</option>' +
     TECNICI.map(t => `<option value="${t.id}">${t.nome} ${t.cognome}</option>`).join('');
-  // Brand da courses.js
-  const brands = [...new Set(COURSES.map(c => c.brand))].sort();
+ 
+  // Brand da courses.js (con fallback sicuro)
+  const courses = (typeof COURSES !== 'undefined' && Array.isArray(COURSES)) ? COURSES : [];
+  const brands  = [...new Set(courses.map(c => c.brand))].sort();
   document.getElementById('m-brand').innerHTML =
     '<option value="">Seleziona brand...</option>' +
     brands.map(b => `<option value="${b}">${b}</option>`).join('');
+ 
   document.getElementById('m-corso').innerHTML = '<option value="">Prima seleziona brand...</option>';
   document.getElementById('m-cons').value = new Date().toISOString().split('T')[0];
   document.getElementById('m-scad').value = '';
@@ -385,20 +464,22 @@ function openModal() {
   document.getElementById('m-err').classList.remove('show');
   document.getElementById('modal').classList.add('open');
 }
-
+ 
 function closeModal() {
   document.getElementById('modal').classList.remove('open');
 }
-
+ 
 function fillCorsi() {
-  const b = document.getElementById('m-brand').value;
+  const b   = document.getElementById('m-brand').value;
   const sel = document.getElementById('m-corso');
   if (!b) { sel.innerHTML = '<option value="">Prima seleziona brand...</option>'; return; }
-  const corsi = COURSES.filter(c => c.brand === b);
-  sel.innerHTML = '<option value="">Seleziona corso...</option>' +
-    corsi.map(c => `<option value="${c.nome}">${c.nome}</option>`).join('');
+  const courses = (typeof COURSES !== 'undefined' && Array.isArray(COURSES)) ? COURSES : [];
+  const corsi   = courses.filter(c => c.brand === b);
+  sel.innerHTML = corsi.length
+    ? '<option value="">Seleziona corso...</option>' + corsi.map(c => `<option value="${c.nome}">${c.nome}</option>`).join('')
+    : '<option value="">Nessun corso disponibile</option>';
 }
-
+ 
 async function salvaCert() {
   const techId = document.getElementById('m-tec').value;
   const brand  = document.getElementById('m-brand').value;
@@ -408,14 +489,16 @@ async function salvaCert() {
   const note   = document.getElementById('m-note').value;
   const errEl  = document.getElementById('m-err');
   const btn    = document.getElementById('btn-salva');
-
+ 
   errEl.classList.remove('show');
+ 
   if (!techId || !brand || !corso || !cons) {
     errEl.textContent = 'Compila i campi obbligatori (*)';
     errEl.classList.add('show'); return;
   }
-
+ 
   btn.disabled = true; btn.textContent = 'Salvataggio...';
+ 
   try {
     const { error } = await SB.from('certificazioni').insert({
       tech_id: techId, brand, corso,
@@ -435,7 +518,7 @@ async function salvaCert() {
     btn.disabled = false; btn.textContent = 'Salva certificazione';
   }
 }
-
+ 
 // ============================================================
 // TOAST
 // ============================================================
